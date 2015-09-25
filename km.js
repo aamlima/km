@@ -74,10 +74,10 @@ var km = {
         clearTimeout(km.timeout);
     },
     updateShow: function() {
-        var msg = "Desc:\n";
+        var msg = "Desc: \n";
         msg += km.getChampionsFirstLetter();
         km.desc.innerHTML = msg;
-        msg = "\nAsc:\n";
+        msg = "\nAsc: \n";
         msg += km.getReverseChampionsLetter();
         km.asc.innerHTML = msg;
         msg = "\nMatchs found: " + km.matchsQtd;
