@@ -8,7 +8,6 @@ var km = {
     asc: undefined,
     desc: undefined,
     qtd: undefined,
-    //match-history-list-9-list
     GetMatchsDate: function () {
         var dates = document.getElementsByClassName("date-duration-date");
         var datesList = [];
@@ -52,29 +51,31 @@ var km = {
         return reverseLetters;
     },
     GetAscendingHTML: function () {
-        var names = document.getElementsByClassName("champion-nameplate-name");
-        var dates = document.getElementsByClassName("date-duration-date");
+        var names = km.GetChampionsName();
+        var dates = km.GetMatchsDate();
         var ascendingHTML = "";
         var i;
         for (i = names.length - 1; i >= 0; i--) {
-            var name = names[i].childNodes[1].childNodes[0].nodeValue;
-            var date = dates[i].childNodes[0].childNodes[0].nodeValue;
-            ascendingHTML += '<span title="' + name + ' - ' + date + '">' + name.charAt(0) + '</span>';
-            //<a href="https://support.riotgames.com/hc/pt-br">Suporte</a>
+            ascendingHTML += '<span ' +
+                'onmouseout="this.style.backgroundColor = \'#000\';" ' +
+                'onmouseover="this.style.backgroundColor = \'#00A\';" ' +
+                'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
+                ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
         }
         km.matchsQtd = names.length;
         return ascendingHTML;
     },
     GetDescendingHTML: function () {
-        var names = document.getElementsByClassName("champion-nameplate-name");
-        var dates = document.getElementsByClassName("date-duration-date");
+        var names = km.GetChampionsName();
+        var dates = km.GetMatchsDate();
         var descendingHTML = "";
         var i;
         for (i = 0; i < names.length; i++) {
-            var name = names[i].childNodes[1].childNodes[0].nodeValue;
-            var date = dates[i].childNodes[0].childNodes[0].nodeValue;
-            descendingHTML += '<span title="' + name + ' - ' + date + '">' + name.charAt(0) + '</span>';
-            //<a href="https://support.riotgames.com/hc/pt-br">Suporte</a>
+            descendingHTML += '<span ' +
+                'onmouseout="this.style.backgroundColor = \'#000\';" ' +
+                'onmouseover="this.style.backgroundColor = \'#00A\';" '+
+                'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
+                ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
         }
         km.matchsQtd = names.length;
         return descendingHTML;
