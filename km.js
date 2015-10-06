@@ -43,22 +43,6 @@ var km = {
         km.matchesQtd = namesList.length;
         return namesList;
     },
-    GetChampionsFirstLetter: function(){
-        var nameList = km.GetChampionsName();
-        var letters = "";
-        for (var i = 0; i < nameList.length; i++) {
-            letters += nameList[i].charAt(0);
-        }
-        return letters;
-    },
-    GetReverseChampionsLetter: function(){
-        var letters = km.GetChampionsFirstLetter();
-        var reverseLetters = "";
-        for (var i = letters.length - 1; i >= 0; i--) {
-            reverseLetters += letters[i];
-        }
-        return reverseLetters;
-    },
     GetAscendingHTML: function () {
         var names = km.GetChampionsName();
         var dates = km.GetMatchesDate();
