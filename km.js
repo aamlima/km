@@ -1,7 +1,6 @@
 var km = {
     timeout: undefined,
-    matchsQtd: 0,
-    msg: "",
+    MatchesQtd: 0,
     start: undefined,
     stop: undefined,
     update: undefined,
@@ -10,7 +9,11 @@ var km = {
     qtd: undefined,
     menuDiv: undefined,
     resultDiv: undefined,
-    GetMatchsDate: function () {
+    GetMatchesResult: function(){
+        var results = document.getElementsByClassName("result-marker");
+        var matchesResult = [];
+    },
+    GetMatchesDate: function () {
         var dates = document.getElementsByClassName("date-duration-date");
         var datesList = [];
         var i;
@@ -22,7 +25,7 @@ var km = {
     GetLastMatchDate: function () {
         var dates = document.getElementsByClassName("date-duration-date");
         var lastDateElem = dates[dates.length - 1];
-        return km.GetMatchsDate().pop();
+        return km.GetMatchesDate().pop();
     },
     GetChampionsName: function () {
         var names = document.getElementsByClassName("champion-nameplate-name");
@@ -31,7 +34,7 @@ var km = {
         for (i = 0; i < names.length; i++) {
             namesList.push(names[i].childNodes[1].childNodes[0].nodeValue);
         }
-        km.matchsQtd = namesList.length;
+        km.MatchesQtd = namesList.length;
         return namesList;
     },
     GetChampionsFirstLetter: function(){
@@ -54,7 +57,7 @@ var km = {
     },
     GetAscendingHTML: function () {
         var names = km.GetChampionsName();
-        var dates = km.GetMatchsDate();
+        var dates = km.GetMatchesDate();
         var ascendingHTML = "";
         var i;
         for (i = names.length - 1; i >= 0; i--) {
@@ -64,12 +67,12 @@ var km = {
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
                 ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
         }
-        km.matchsQtd = names.length;
+        km.MatchesQtd = names.length;
         return ascendingHTML;
     },
     GetDescendingHTML: function () {
         var names = km.GetChampionsName();
-        var dates = km.GetMatchsDate();
+        var dates = km.GetMatchesDate();
         var descendingHTML = "";
         var i;
         for (i = 0; i < names.length; i++) {
@@ -79,11 +82,11 @@ var km = {
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
                 ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
         }
-        km.matchsQtd = names.length;
+        km.MatchesQtd = names.length;
         return descendingHTML;
     },
     LoopScroll: function () {
-        var date = km.GetLastMatchDate()
+        var date = km.GetLastMatchDate();
         if (date === "1/5/2014" || date === "30/4/2014") {
             km.start.disabled = false;
             km.stop.disabled = true;
@@ -106,7 +109,7 @@ var km = {
         msg = "Desc: ";
         msg += km.GetDescendingHTML();
         km.desc.innerHTML = msg;
-        msg = "Matchs found: " + km.matchsQtd;
+        msg = "Matches found: " + km.MatchesQtd;
         km.qtd.innerHTML = msg;
     },
     Attach: function () {
