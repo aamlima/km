@@ -8,6 +8,8 @@ var km = {
     asc: undefined,
     desc: undefined,
     qtd: undefined,
+    menuDiv: undefined,
+    resultDiv: undefined,
     GetMatchsDate: function () {
         var dates = document.getElementsByClassName("date-duration-date");
         var datesList = [];
@@ -20,7 +22,7 @@ var km = {
     GetLastMatchDate: function () {
         var dates = document.getElementsByClassName("date-duration-date");
         var lastDateElem = dates[dates.length - 1];
-        return lastDateElem.childNodes[0].childNodes[0].nodeValue;
+        return km.GetMatchsDate().pop();
     },
     GetChampionsName: function () {
         var names = document.getElementsByClassName("champion-nameplate-name");
@@ -85,19 +87,6 @@ var km = {
         if (date === "1/5/2014" || date === "30/4/2014") {
             km.start.disabled = false;
             km.stop.disabled = true;
-            km.msg = "Desc:\n";
-            km.msg += km.GetChampionsFirstLetter();
-            km.msg += "\nAsc:\n";
-            km.msg += km.GetReverseChampionsLetter();
-            km.msg += "\nMatchs found: " + km.matchsQtd;
-            var msg = "Desc:\n";
-            msg += km.GetChampionsFirstLetter();
-            km.desc.innerHTML = msg;
-            msg = "\nAsc:\n";
-            msg += km.GetReverseChampionsLetter();
-            km.asc.innerHTML = msg;
-            msg = "\nMatchs found: " + km.matchsQtd;
-            km.qtd.innerHTML = msg;
         } else {
             window.scrollTo(0, document.body.scrollHeight);
             km.start.disabled = true;
@@ -111,16 +100,6 @@ var km = {
         clearTimeout(km.timeout);
     },
     UpdateShow: function () {
-        var msg = "Asc: ";
-        msg += km.GetReverseChampionsLetter();
-        km.asc.innerHTML = msg;
-        msg = "Desc: ";
-        msg += km.GetChampionsFirstLetter();
-        km.desc.innerHTML = msg;
-        msg = "Matchs found: " + km.matchsQtd;
-        km.qtd.innerHTML = msg;
-    },
-    UpdateShow2: function () {
         var msg = "Asc: ";
         msg += km.GetAscendingHTML();
         km.asc.innerHTML = msg;
@@ -149,12 +128,13 @@ var km = {
         btn = document.createElement("input");
         btn.setAttribute("type", "button");
         btn.setAttribute("value", "Update Text");
-        btn.addEventListener("click", km.UpdateShow2);
+        btn.addEventListener("click", km.UpdateShow);
         div.appendChild(btn);
         km.update = btn;
         document.body.appendChild(div);
+        km.menuDiv = div;
         div = document.createElement("div");
-        div.setAttribute("style", "margin: 5px; color:white; z-index: 100; background-color: black;");
+        div.setAttribute("style", "margin: 5px; color: white; z-index: 100; background-color: black;");
         document.body.appendChild(div);
         km.asc = document.createElement("div");
         km.desc = document.createElement("div");
@@ -162,6 +142,12 @@ var km = {
         div.appendChild(km.asc);
         div.appendChild(km.desc);
         div.appendChild(km.qtd);
+        km.resultDiv = div;
+    },
+    DestroySelf: function () {
+        document.body.removeChild(km.menuDiv);
+        document.body.removeChild(km.resultDiv);
+        km = undefined;
     }
 };
 
