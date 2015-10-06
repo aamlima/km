@@ -24,8 +24,7 @@ var km = {
     GetMatchesDate: function () {
         var dates = document.getElementsByClassName("date-duration-date");
         var datesList = [];
-        var i;
-        for (i = 0; i < dates.length; i++) {
+        for (var i = 0; i < dates.length; i++) {
             datesList.push(dates[i].childNodes[0].childNodes[0].nodeValue);
         }
         return datesList;
@@ -38,8 +37,7 @@ var km = {
     GetChampionsName: function () {
         var names = document.getElementsByClassName("champion-nameplate-name");
         var namesList = [];
-        var i;
-        for (i = 0; i < names.length; i++) {
+        for (var i = 0; i < names.length; i++) {
             namesList.push(names[i].childNodes[1].childNodes[0].nodeValue);
         }
         km.matchesQtd = namesList.length;
@@ -48,8 +46,7 @@ var km = {
     GetChampionsFirstLetter: function(){
         var nameList = km.GetChampionsName();
         var letters = "";
-        var i;
-        for (i = 0; i < nameList.length; i++) {
+        for (var i = 0; i < nameList.length; i++) {
             letters += nameList[i].charAt(0);
         }
         return letters;
@@ -57,8 +54,7 @@ var km = {
     GetReverseChampionsLetter: function(){
         var letters = km.GetChampionsFirstLetter();
         var reverseLetters = "";
-        var i;
-        for (i = letters.length - 1; i >= 0; i--) {
+        for (var i = letters.length - 1; i >= 0; i--) {
             reverseLetters += letters[i];
         }
         return reverseLetters;
@@ -68,8 +64,7 @@ var km = {
         var dates = km.GetMatchesDate();
         var results = km.GetMatchesResult();
         var ascendingHTML = "";
-        var i;
-        for (i = names.length - 1; i >= 0; i--) {
+        for (var i = names.length - 1; i >= 0; i--) {
             ascendingHTML += '<span style="background-color: ' + results[i] + ';"' +
                 'onmouseout="this.style.backgroundColor = \'' + results[i] + '\';" ' +
                 'onmouseover="this.style.backgroundColor = \'#00A\';" ' +
@@ -84,8 +79,7 @@ var km = {
         var dates = km.GetMatchesDate();
         var results = km.GetMatchesResult();
         var descendingHTML = "";
-        var i;
-        for (i = 0; i < names.length; i++) {
+        for (var i = 0; i < names.length; i++) {
             descendingHTML += '<span style="background-color: ' + results[i] + ';"' +
                 'onmouseout="this.style.backgroundColor = \'' + results[i] + '\';" ' +
                 'onmouseover="this.style.backgroundColor = \'#00A\';" '+
