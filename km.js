@@ -12,6 +12,14 @@ var km = {
     GetMatchesResult: function(){
         var results = document.getElementsByClassName("result-marker");
         var matchesResult = [];
+        for (var i = 0; i < results.length; i++) {
+            if (results[i].classList[0] === "game-summary-defeat") {
+                matchesResult.push("#A00");
+            } else {
+                matchesResult.push("#0A0");
+            }
+        }
+        return matchesResult;
     },
     GetMatchesDate: function () {
         var dates = document.getElementsByClassName("date-duration-date");
@@ -58,11 +66,12 @@ var km = {
     GetAscendingHTML: function () {
         var names = km.GetChampionsName();
         var dates = km.GetMatchesDate();
+        var results = km.GetMatchesResult();
         var ascendingHTML = "";
         var i;
         for (i = names.length - 1; i >= 0; i--) {
-            ascendingHTML += '<span ' +
-                'onmouseout="this.style.backgroundColor = \'#000\';" ' +
+            ascendingHTML += '<span style="background-color: ' + results[i] + ';"' +
+                'onmouseout="this.style.backgroundColor = \'' + results[i] + '\';" ' +
                 'onmouseover="this.style.backgroundColor = \'#00A\';" ' +
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
                 ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
@@ -73,11 +82,12 @@ var km = {
     GetDescendingHTML: function () {
         var names = km.GetChampionsName();
         var dates = km.GetMatchesDate();
+        var results = km.GetMatchesResult();
         var descendingHTML = "";
         var i;
         for (i = 0; i < names.length; i++) {
-            descendingHTML += '<span ' +
-                'onmouseout="this.style.backgroundColor = \'#000\';" ' +
+            descendingHTML += '<span style="background-color: ' + results[i] + ';"' +
+                'onmouseout="this.style.backgroundColor = \'' + results[i] + '\';" ' +
                 'onmouseover="this.style.backgroundColor = \'#00A\';" '+
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
                 ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
