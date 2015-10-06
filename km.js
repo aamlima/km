@@ -38,35 +38,50 @@ var km = {
         km.matchesQtd = namesList.length;
         return namesList;
     },
-    GetAscendingHTML: function () {
+    GetMatchesInfo: function () {
         var names = km.GetChampionsName();
         var dates = km.GetMatchesDate();
         var results = km.GetMatchesResult();
-        var ascendingHTML = "";
-        for (var i = names.length - 1; i >= 0; i--) {
-            ascendingHTML += '<span style="background-color: ' + results[i] + ';"' +
-                'onmouseout="this.style.backgroundColor = \'' + results[i] + '\';" ' +
+        var matches = [];
+        for (var i = 0; i < names.length; i++) {
+            matches.push({
+                champion: names[i],
+                championLetter: names[i].charAt(0),
+                date: dates[i],
+                result: (results[i] === "#0A0"),
+                resultColor: results[i]
+            });
+        }
+
+        return matches;
+    },
+    GetAscendingHTML: function () {
+        var matches = km.GetMatchesInfo();
+        var html = "";
+        for (var i = matches.length - 1; i >= 0; i--) {
+            html += '<span style="background-color: ' + matches[i].resultColor + ';"' +
+                'onmouseout="this.style.backgroundColor = \'' + matches[i].resultColor + '\';" ' +
                 'onmouseover="this.style.backgroundColor = \'#00A\';" ' +
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
-                ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
+                ' title="' + (matches[i].result ? 'W: ' : 'L: ') + matches[i].champion + ' - ' + matches[i].date + ' ">' +
+                matches[i].championLetter + '</span>';
         }
-        km.matchesQtd = names.length;
-        return ascendingHTML;
+        km.matchesQtd = matches.length;
+        return html;
     },
     GetDescendingHTML: function () {
-        var names = km.GetChampionsName();
-        var dates = km.GetMatchesDate();
-        var results = km.GetMatchesResult();
-        var descendingHTML = "";
-        for (var i = 0; i < names.length; i++) {
-            descendingHTML += '<span style="background-color: ' + results[i] + ';"' +
-                'onmouseout="this.style.backgroundColor = \'' + results[i] + '\';" ' +
-                'onmouseover="this.style.backgroundColor = \'#00A\';" '+
+        var matches = km.GetMatchesInfo();
+        var html = "";
+        for (var i = 0; i < matches.length; i++) {
+            html += '<span style="background-color: ' + matches[i].resultColor + ';"' +
+                'onmouseout="this.style.backgroundColor = \'' + matches[i].resultColor + '\';" ' +
+                'onmouseover="this.style.backgroundColor = \'#00A\';" ' +
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
-                ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
+                ' title="' + (matches[i].result ? 'W: ' : 'L: ') + matches[i].champion + ' - ' + matches[i].date + ' ">' +
+                matches[i].championLetter + '</span>';
         }
-        km.matchesQtd = names.length;
-        return descendingHTML;
+        km.matchesQtd = matches.length;
+        return html;
     },
     LoopScroll: function () {
         var date = km.GetMatchesDate().pop();
