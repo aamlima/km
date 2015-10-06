@@ -29,11 +29,6 @@ var km = {
         }
         return datesList;
     },
-    GetLastMatchDate: function () {
-        var dates = document.getElementsByClassName("date-duration-date");
-        var lastDateElem = dates[dates.length - 1];
-        return km.GetMatchesDate().pop();
-    },
     GetChampionsName: function () {
         var names = document.getElementsByClassName("champion-nameplate-name");
         var namesList = [];
@@ -74,7 +69,7 @@ var km = {
         return descendingHTML;
     },
     LoopScroll: function () {
-        var date = km.GetLastMatchDate();
+        var date = km.GetMatchesDate().pop();
         if (date === "1/5/2014" || date === "30/4/2014") {
             km.start.disabled = false;
             km.stop.disabled = true;
