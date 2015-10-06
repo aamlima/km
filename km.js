@@ -9,6 +9,7 @@ var km = {
     qtd: undefined,
     menuDiv: undefined,
     resultDiv: undefined,
+    checkboxSpoiler: undefined,
     GetMatchesResult: function(){
         var results = document.getElementsByClassName("result-marker");
         var matchesResult = [];
@@ -59,8 +60,10 @@ var km = {
         var matches = km.GetMatchesInfo();
         var html = "";
         for (var i = matches.length - 1; i >= 0; i--) {
-            html += '<span style="background-color: ' + matches[i].resultColor + ';"' +
-                'onmouseout="this.style.backgroundColor = \'' + matches[i].resultColor + '\';" ' +
+            var style = km.checkboxSpoiler.checked ? 'style="background-color: ' + matches[i].resultColor + ';"' : '';
+            var color = km.checkboxSpoiler.checked ? matches[i].resultColor : "#000";
+            html += '<span ' + style +
+                'onmouseout="this.style.backgroundColor = \'' + color + '\';" ' +
                 'onmouseover="this.style.backgroundColor = \'#00A\';" ' +
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
                 ' title="' + (matches[i].result ? 'W: ' : 'L: ') + matches[i].champion + ' - ' + matches[i].date + ' ">' +
@@ -73,8 +76,10 @@ var km = {
         var matches = km.GetMatchesInfo();
         var html = "";
         for (var i = 0; i < matches.length; i++) {
-            html += '<span style="background-color: ' + matches[i].resultColor + ';"' +
-                'onmouseout="this.style.backgroundColor = \'' + matches[i].resultColor + '\';" ' +
+            var style = km.checkboxSpoiler.checked ? 'style="background-color: ' + matches[i].resultColor + ';"' : '';
+            var color = km.checkboxSpoiler.checked ? matches[i].resultColor : "#000";
+            html += '<span ' + style +
+                'onmouseout="this.style.backgroundColor = \'' + color + '\';" ' +
                 'onmouseover="this.style.backgroundColor = \'#00A\';" ' +
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
                 ' title="' + (matches[i].result ? 'W: ' : 'L: ') + matches[i].champion + ' - ' + matches[i].date + ' ">' +
@@ -132,6 +137,10 @@ var km = {
         btn.addEventListener("click", km.UpdateShow);
         div.appendChild(btn);
         km.update = btn;
+        btn = document.createElement("input");
+        btn.setAttribute("type", "checkbox");
+        div.appendChild(btn);
+        km.checkboxSpoiler = btn;
         document.body.appendChild(div);
         km.menuDiv = div;
         div = document.createElement("div");
