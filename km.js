@@ -1,6 +1,6 @@
 var km = {
     timeout: undefined,
-    MatchesQtd: 0,
+    matchesQtd: 0,
     start: undefined,
     stop: undefined,
     update: undefined,
@@ -34,7 +34,7 @@ var km = {
         for (i = 0; i < names.length; i++) {
             namesList.push(names[i].childNodes[1].childNodes[0].nodeValue);
         }
-        km.MatchesQtd = namesList.length;
+        km.matchesQtd = namesList.length;
         return namesList;
     },
     GetChampionsFirstLetter: function(){
@@ -67,7 +67,7 @@ var km = {
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
                 ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
         }
-        km.MatchesQtd = names.length;
+        km.matchesQtd = names.length;
         return ascendingHTML;
     },
     GetDescendingHTML: function () {
@@ -82,7 +82,7 @@ var km = {
                 'onclick="document.getElementsByClassName(\'game-summary\')[' + i + '].click()" ' +
                 ' title="' + names[i] + ' - ' + dates[i] + ' ">' + names[i].charAt(0) + '</span>';
         }
-        km.MatchesQtd = names.length;
+        km.matchesQtd = names.length;
         return descendingHTML;
     },
     LoopScroll: function () {
@@ -109,7 +109,7 @@ var km = {
         msg = "Desc: ";
         msg += km.GetDescendingHTML();
         km.desc.innerHTML = msg;
-        msg = "Matches found: " + km.MatchesQtd;
+        msg = "Matches found: " + km.matchesQtd;
         km.qtd.innerHTML = msg;
     },
     Attach: function () {
