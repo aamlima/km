@@ -81,7 +81,7 @@ var kmv2 = {
     onHistoryLoad: function (d, c) {
         kmv2.games = kmv2.games.concat(c.games.games);
         kmv2.update.disabled = false;
-        kmv2.start.setAttribute("value", (kmv2.gamesCodex.pager.total/kmv2.games.length)+ "%");
+        kmv2.start.setAttribute("value", (kmv2.games.length/kmv2.gamesCodex.pager.total)*100 + "%");
     },
     onPromiseError: function (c, a, b) {
         console.log("Error kmv2 onPromiseError");
