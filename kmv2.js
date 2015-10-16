@@ -85,6 +85,15 @@ var kmv2 = {
     },
     onPromiseError: function (c, a, b) {
         console.log(a + " - " + b);
+    },
+    GetToken: function () {
+        return Codex.model.CurrentUser.getToken();
+    },
+    SetToken: function() {
+        var token = prompt("Insira o token: ");
+        if (token === "") return false;
+        document.cookie = "PVPNET_TOKEN_BR=" + token;
+        return true;
     }
 };
 
