@@ -145,7 +145,7 @@ var km = {
         km.menuDiv = div;
         div = document.createElement("div");
         div.setAttribute("style", "margin: 5px; color: white; z-index: 100; background-color: black;");
-        document.body.appendChild(div);
+        $("body").prepend(div);
         km.asc = document.createElement("div");
         km.desc = document.createElement("div");
         km.qtd = document.createElement("div");
