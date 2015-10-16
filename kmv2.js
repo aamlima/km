@@ -10,9 +10,9 @@ var kmv2 = {
     games: undefined,
     UpdateShow: function () {
         kmv2.games.sort(function (a, b) { return b.gameCreation - a.gameCreation; });
-        kmv2.asc.innerHTML = "";
-        kmv2.desc.innerHTML = "";
-        kmv2.qtd.innerHTML = kmv2.games.length;
+        kmv2.asc.innerHTML = "Crescente:<br>";
+        kmv2.desc.innerHTML = "Descendente:<br>";
+        kmv2.qtd.innerHTML = "Partidas encontradas/total: " + kmv2.games.length + "/" + kmv2.gamesCodex.pager.total;
         for (var i = 0; i < kmv2.games.length; i++) {
             kmv2.asc.innerHTML += Riot.DDragon.models.champion.remapKeys[kmv2.games[kmv2.games.length - i - 1].participants[0].championId][0];
             kmv2.desc.innerHTML += Riot.DDragon.models.champion.remapKeys[kmv2.games[i].participants[0].championId][0];
