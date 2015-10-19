@@ -14,13 +14,21 @@ var kmv2 = {
         kmv2.desc.innerHTML = "Decrescente:<br>";
         kmv2.qtd.innerHTML = "Partidas encontradas/total: " + kmv2.games.length + "/" + kmv2.gamesCodex.pager.total;
         for (var i = 0; i < kmv2.games.length; i++) {
+            var gameAsc = kmv2.games[kmv2.games.length - i - 1];
+            var gameDesc = kmv2.games[i];
+            var championAsc = Riot.DDragon.models.champion.remapKeys[gameAsc.participants[0].championId];
+            var championDesc = Riot.DDragon.models.champion.remapKeys[gameDesc.participants[0].championId];
             kmv2.asc.innerHTML +=
-                "<a style=\"color: white;\" href=\"#match-details/BR1/" + kmv2.games[kmv2.games.length - i - 1].gameId + "\">"
-                + Riot.DDragon.models.champion.remapKeys[kmv2.games[kmv2.games.length - i - 1].participants[0].championId][0] +
+                "<a style=\"color: white;\" href=\"#match-details/BR1/" + gameAsc.gameId +
+                "\" title=\"" + (gameAsc.participants[0].stats.win ? "V" : "D") + ": " + championAsc + "(" + gameAsc.participants[0].stats.champLevel + ") " +
+                gameAsc.participants[0].stats.kills + "/" + gameAsc.participants[0].stats.deaths + "/" + gameAsc.participants[0].stats.assists + "\">"
+                + championAsc[0] +
                 "</a>";
             kmv2.desc.innerHTML +=
-                "<a style=\"color: white;\" href=\"#match-details/BR1/" + kmv2.games[i].gameId + "\">"
-                + Riot.DDragon.models.champion.remapKeys[kmv2.games[i].participants[0].championId][0] +
+                "<a style=\"color: white;\" href=\"#match-details/BR1/" + gameDesc.gameId +
+                "\" title=\"" + (gameDesc.participants[0].stats.win ? "V" : "D") + ": " + championDesc + "(" + gameDesc.participants[0].stats.champLevel + ") " +
+                gameDesc.participants[0].stats.kills + "/" + gameDesc.participants[0].stats.deaths + "/" + gameDesc.participants[0].stats.assists + "\">"
+                + championDesc[0] +
                 "</a>";
         }
     },
