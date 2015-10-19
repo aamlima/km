@@ -14,8 +14,14 @@ var kmv2 = {
         kmv2.desc.innerHTML = "Decrescente:<br>";
         kmv2.qtd.innerHTML = "Partidas encontradas/total: " + kmv2.games.length + "/" + kmv2.gamesCodex.pager.total;
         for (var i = 0; i < kmv2.games.length; i++) {
-            kmv2.asc.innerHTML += Riot.DDragon.models.champion.remapKeys[kmv2.games[kmv2.games.length - i - 1].participants[0].championId][0];
-            kmv2.desc.innerHTML += Riot.DDragon.models.champion.remapKeys[kmv2.games[i].participants[0].championId][0];
+            kmv2.asc.innerHTML +=
+                "<a style=\"color: white;\" href=\"#match-details/BR1/" + kmv2.games[kmv2.games.length - i - 1].gameId + "\">"
+                + Riot.DDragon.models.champion.remapKeys[kmv2.games[kmv2.games.length - i - 1].participants[0].championId][0] +
+                "</a>";
+            kmv2.desc.innerHTML +=
+                "<a style=\"color: white;\" href=\"#match-details/BR1/" + kmv2.games[i].gameId + "\">"
+                + Riot.DDragon.models.champion.remapKeys[kmv2.games[i].participants[0].championId][0] +
+                "</a>";
         }
     },
     Attach: function () {
@@ -85,15 +91,6 @@ var kmv2 = {
     },
     onPromiseError: function (c, a, b) {
         console.log(a + " - " + b);
-    },
-    GetToken: function () {
-        return Codex.model.CurrentUser.getToken();
-    },
-    SetToken: function() {
-        var token = prompt("Insira o token: ");
-        if (token === "") return false;
-        document.cookie = "PVPNET_TOKEN_BR=" + token;
-        return true;
     }
 };
 
