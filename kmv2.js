@@ -20,14 +20,18 @@ var kmv2 = {
             var championDesc = Riot.DDragon.models.champion.remapKeys[gameDesc.participants[0].championId];
             kmv2.asc.innerHTML +=
                 "<a style=\"color: white;\" href=\"#match-details/BR1/" + gameAsc.gameId + "/" + gameAsc.participantIdentities[0].player.currentAccountId +
-                "\" title=\"" + (gameAsc.participants[0].stats.win ? "V" : "D") + ": " + championAsc + "(" + gameAsc.participants[0].stats.champLevel + ") " +
-                gameAsc.participants[0].stats.kills + "/" + gameAsc.participants[0].stats.deaths + "/" + gameAsc.participants[0].stats.assists + "\">"
+                "\" title=\"" + (gameAsc.participants[0].stats.win ? "V" : "D") + ": " +
+                championAsc + "(" + gameAsc.participants[0].stats.champLevel + ") " +
+                gameAsc.participants[0].stats.kills + "/" + gameAsc.participants[0].stats.deaths + "/" + gameAsc.participants[0].stats.assists +
+                " " + Math.floor(gameAsc.gameDuration/60) + ":" + (gameAsc.gameDuration-(Math.floor(gameAsc.gameDuration/60)*60)) + "\">"
                 + championAsc[0] +
                 "</a>";
             kmv2.desc.innerHTML +=
                 "<a style=\"color: white;\" href=\"#match-details/BR1/" + gameDesc.gameId + "/" + gameDesc.participantIdentities[0].player.currentAccountId +
-                "\" title=\"" + (gameDesc.participants[0].stats.win ? "V" : "D") + ": " + championDesc + "(" + gameDesc.participants[0].stats.champLevel + ") " +
-                gameDesc.participants[0].stats.kills + "/" + gameDesc.participants[0].stats.deaths + "/" + gameDesc.participants[0].stats.assists + "\">"
+                "\" title=\"" + (gameDesc.participants[0].stats.win ? "V" : "D") + ": "
+                + championDesc + "(" + gameDesc.participants[0].stats.champLevel + ") " +
+                gameDesc.participants[0].stats.kills + "/" + gameDesc.participants[0].stats.deaths + "/" + gameDesc.participants[0].stats.assists +
+                " " + Math.floor(gameDesc.gameDuration/60) + ":" + (gameDesc.gameDuration-(Math.floor(gameDesc.gameDuration/60)*60)) + "\">"
                 + championDesc[0] +
                 "</a>";
         }
