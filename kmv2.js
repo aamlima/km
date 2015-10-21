@@ -13,42 +13,29 @@ var kmv2 = {
         kmv2.asc.innerHTML = "Crescente:<br>";
         kmv2.desc.innerHTML = "Decrescente:<br>";
         kmv2.qtd.innerHTML = "Partidas encontradas/total: " + kmv2.games.length + "/" + kmv2.gamesCodex.pager.total;
-        var finalAscHTML = "";
-        var finalDescHTML = "";
+        var result = [{ game: undefined, html: "" }, { game: undefined, html: "" }];
         for (var i = 0; i < kmv2.games.length; i++) {
-            var gameAsc = kmv2.games[kmv2.games.length - i - 1];
-            var gameDesc = kmv2.games[i];
-            var championAsc = Riot.DDragon.models.champion.remapKeys[gameAsc.participants[0].championId];
-            var championDesc = Riot.DDragon.models.champion.remapKeys[gameDesc.participants[0].championId];
-            var dateAsc = new Date(gameAsc.gameCreation);
-            var dateDesc = new Date(gameDesc.gameCreation);
-            finalAscHTML +=
-                "<a style=\"color: white;\" href=\"#match-details/BR1/" + gameAsc.gameId + "/" + gameAsc.participantIdentities[0].player.currentAccountId +
-                "\" title=\"" + (gameAsc.participants[0].stats.win ? "V" : "D") + ": " +
-                championAsc + " - " + (gameAsc.participants[0].timeline.role === "NONE" ? "" : gameAsc.participants[0].timeline.role) +
-                " " + gameAsc.participants[0].timeline.lane + " - " + gameAsc.participants[0].stats.champLevel + " - " +
-                gameAsc.participants[0].stats.kills + "/" + gameAsc.participants[0].stats.deaths + "/" + gameAsc.participants[0].stats.assists +
-                " | " + Codex.common.binding.Map.maps[gameAsc.mapId] + " | " + Codex.common.binding.Mode.modes[gameAsc.gameMode] +
-                " | " + Codex.common.binding.Queue.queues[gameAsc.queueId] +
-                " | " + Math.floor(gameAsc.gameDuration / 60) + ":" + (gameAsc.gameDuration - (Math.floor(gameAsc.gameDuration / 60) * 60)) +
-                " | " + dateAsc.toLocaleString() + " | " + gameAsc.gameVersion + " | " + gameAsc.participantIdentities[0].player.summonerName + "\">"
-                + championAsc[0] +
-                "</a>";
-            finalDescHTML +=
-                "<a style=\"color: white;\" href=\"#match-details/BR1/" + gameDesc.gameId + "/" + gameDesc.participantIdentities[0].player.currentAccountId +
-                "\" title=\"" + (gameDesc.participants[0].stats.win ? "V" : "D") + ": " +
-                championDesc + " - " + (gameDesc.participants[0].timeline.role === "NONE" ? "" : gameDesc.participants[0].timeline.role) +
-                " " + gameDesc.participants[0].timeline.lane + " - " + gameDesc.participants[0].stats.champLevel + " - " +
-                gameDesc.participants[0].stats.kills + "/" + gameDesc.participants[0].stats.deaths + "/" + gameDesc.participants[0].stats.assists +
-                " | " + Codex.common.binding.Map.maps[gameDesc.mapId] + " | " + Codex.common.binding.Mode.modes[gameDesc.gameMode] +
-                " | " + Codex.common.binding.Queue.queues[gameDesc.queueId] +
-                " | " + Math.floor(gameDesc.gameDuration / 60) + ":" + (gameDesc.gameDuration - (Math.floor(gameDesc.gameDuration / 60) * 60)) +
-                " | " + dateDesc.toLocaleString() + " | " + gameDesc.gameVersion + " | " + gameDesc.participantIdentities[0].player.summonerName + "\">"
-                + championDesc[0] +
-                "</a>";
+            result[0].game = kmv2.games[kmv2.games.length - i - 1];
+            result[1].game = kmv2.games[i];
+            for (var j = 0; j < result.length; j++) {
+                result[j].html +=
+                "<a style=\"color: white;\" href=\"#match-details/BR1/" + result[j].game.gameId + "/" +
+                result[j].game.participantIdentities[0].player.currentAccountId + "\" title=\"" + (result[j].game.participants[0].stats.win ? "V" : "D") +
+                ": " + Riot.DDragon.models.champion.remapKeys[result[j].game.participants[0].championId] + " | " +
+                (result[j].game.participants[0].timeline.role === "NONE" ? "" : result[j].game.participants[0].timeline.role) + " " +
+                result[j].game.participants[0].timeline.lane + " | " + result[j].game.participants[0].stats.champLevel + " | " +
+                result[j].game.participants[0].stats.kills + "/" + result[j].game.participants[0].stats.deaths + "/" +
+                result[j].game.participants[0].stats.assists + " | " + Codex.common.binding.Map.maps[result[j].game.mapId] + " | " +
+                Codex.common.binding.Mode.modes[result[j].game.gameMode] + " | " + Codex.common.binding.Queue.queues[result[j].game.queueId] + " | " +
+                Math.floor(result[j].game.gameDuration / 60) + ":" + (result[j].game.gameDuration - (Math.floor(result[j].game.gameDuration / 60) * 60)) +
+                " | " + new Date(result[j].game.gameCreation).toLocaleString() + " | " + result[j].game.gameVersion + " | " +
+                result[j].game.participantIdentities[0].player.summonerName + "\">" +
+                Riot.DDragon.models.champion.remapKeys[result[j].game.participants[0].championId][0] + "</a>";
+            }
         }
-        kmv2.asc.innerHTML += finalAscHTML;
-        kmv2.desc.innerHTML += finalDescHTML;
+
+        kmv2.asc.innerHTML += result[0].html;
+        kmv2.desc.innerHTML += result[1].html;
     },
     Attach: function () {
         var div = document.createElement("div");
