@@ -30,7 +30,7 @@ var kmv2 = {
                 " | " + Codex.common.binding.Map.maps[gameAsc.mapId] + " | " + Codex.common.binding.Mode.modes[gameAsc.gameMode] +
                 " | " + Codex.common.binding.Queue.queues[gameAsc.queueId] +
                 " | " + Math.floor(gameAsc.gameDuration / 60) + ":" + (gameAsc.gameDuration - (Math.floor(gameAsc.gameDuration / 60) * 60)) +
-                " | " + dateAsc.toLocaleString() + " | " + gameAsc.gameVersion + "\">"
+                " | " + dateAsc.toLocaleString() + " | " + gameAsc.gameVersion + " | " + gameAsc.participantIdentities[0].player.summonerName + "\">"
                 + championAsc[0] +
                 "</a>";
             finalDescHTML +=
@@ -41,7 +41,7 @@ var kmv2 = {
                 " | " + Codex.common.binding.Map.maps[gameDesc.mapId] + " | " + Codex.common.binding.Mode.modes[gameDesc.gameMode] +
                 " | " + Codex.common.binding.Queue.queues[gameDesc.queueId] +
                 " | " + Math.floor(gameDesc.gameDuration / 60) + ":" + (gameDesc.gameDuration - (Math.floor(gameDesc.gameDuration / 60) * 60)) +
-                " | " + dateDesc.toLocaleString() + " | " + gameDesc.gameVersion + "\">"
+                " | " + dateDesc.toLocaleString() + " | " + gameDesc.gameVersion + " | " + gameDesc.participantIdentities[0].player.summonerName + "\">"
                 + championDesc[0] +
                 "</a>";
         }
@@ -73,7 +73,7 @@ var kmv2 = {
         kmv2.desc = document.createElement("div");
         kmv2.qtd = document.createElement("div");
         var d = document.createElement("div");
-        d.innerHTML = "(V)itória/(D)errota: Campeão(Lvl) K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch";
+        d.innerHTML = "(V)itória/(D)errota: Campeão(Lvl) K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome";
         div.appendChild(d);
         div.appendChild(kmv2.asc);
         div.appendChild(kmv2.desc);
