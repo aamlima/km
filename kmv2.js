@@ -25,7 +25,7 @@ var kmv2 = {
             finalAscHTML +=
                 "<a style=\"color: white;\" href=\"#match-details/BR1/" + gameAsc.gameId + "/" + gameAsc.participantIdentities[0].player.currentAccountId +
                 "\" title=\"" + (gameAsc.participants[0].stats.win ? "V" : "D") + ": " +
-                championAsc + "(" + gameAsc.participants[0].stats.champLevel + ") " +
+                championAsc + " - " + gameAsc.participants[0].timeline.lane + " - " + gameAsc.participants[0].stats.champLevel + " - " +
                 gameAsc.participants[0].stats.kills + "/" + gameAsc.participants[0].stats.deaths + "/" + gameAsc.participants[0].stats.assists +
                 " | " + Codex.common.binding.Map.maps[gameAsc.mapId] + " | " + Codex.common.binding.Mode.modes[gameAsc.gameMode] +
                 " | " + Codex.common.binding.Queue.queues[gameAsc.queueId] +
@@ -35,8 +35,8 @@ var kmv2 = {
                 "</a>";
             finalDescHTML +=
                 "<a style=\"color: white;\" href=\"#match-details/BR1/" + gameDesc.gameId + "/" + gameDesc.participantIdentities[0].player.currentAccountId +
-                "\" title=\"" + (gameDesc.participants[0].stats.win ? "V" : "D") + ": "
-                + championDesc + "(" + gameDesc.participants[0].stats.champLevel + ") " +
+                "\" title=\"" + (gameDesc.participants[0].stats.win ? "V" : "D") + ": " +
+                championDesc + " - " + gameDesc.participants[0].timeline.lane + " - " + gameDesc.participants[0].stats.champLevel + " - " +
                 gameDesc.participants[0].stats.kills + "/" + gameDesc.participants[0].stats.deaths + "/" + gameDesc.participants[0].stats.assists +
                 " | " + Codex.common.binding.Map.maps[gameDesc.mapId] + " | " + Codex.common.binding.Mode.modes[gameDesc.gameMode] +
                 " | " + Codex.common.binding.Queue.queues[gameDesc.queueId] +
@@ -73,7 +73,7 @@ var kmv2 = {
         kmv2.desc = document.createElement("div");
         kmv2.qtd = document.createElement("div");
         var d = document.createElement("div");
-        d.innerHTML = "(V)itória/(D)errota: Campeão(Lvl) K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome";
+        d.innerHTML = "(V)itória/(D)errota: Campeão | Lane | Level | K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome";
         div.appendChild(d);
         div.appendChild(kmv2.asc);
         div.appendChild(kmv2.desc);
