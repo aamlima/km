@@ -27,6 +27,8 @@ var kmv2 = {
                 "\" title=\"" + (gameAsc.participants[0].stats.win ? "V" : "D") + ": " +
                 championAsc + "(" + gameAsc.participants[0].stats.champLevel + ") " +
                 gameAsc.participants[0].stats.kills + "/" + gameAsc.participants[0].stats.deaths + "/" + gameAsc.participants[0].stats.assists +
+                " " + Codex.common.binding.Map.maps[gameAsc.mapId] + " " + Codex.common.binding.Mode.modes[gameAsc.gameMode] +
+                " " + Codex.common.binding.Queue.queues[gameAsc.queueId] +
                 " " + Math.floor(gameAsc.gameDuration / 60) + ":" + (gameAsc.gameDuration - (Math.floor(gameAsc.gameDuration / 60) * 60)) +
                 " " + dateAsc.toLocaleString() + "\">"
                 + championAsc[0] +
@@ -36,6 +38,8 @@ var kmv2 = {
                 "\" title=\"" + (gameDesc.participants[0].stats.win ? "V" : "D") + ": "
                 + championDesc + "(" + gameDesc.participants[0].stats.champLevel + ") " +
                 gameDesc.participants[0].stats.kills + "/" + gameDesc.participants[0].stats.deaths + "/" + gameDesc.participants[0].stats.assists +
+                " " + Codex.common.binding.Map.maps[gameDesc.mapId] + " " + Codex.common.binding.Mode.modes[gameDesc.gameMode] +
+                " " + Codex.common.binding.Queue.queues[gameDesc.queueId] +
                 " " + Math.floor(gameDesc.gameDuration / 60) + ":" + (gameDesc.gameDuration - (Math.floor(gameDesc.gameDuration / 60) * 60)) +
                 " " + dateDesc.toLocaleString() + "\">"
                 + championDesc[0] +
