@@ -73,6 +73,8 @@ var kmv2 = {
     },
     Test: function () {
         kmv2.games = [];
+        kmv2.update.disabled = true;
+        kmv2.start.disabled = true;
         var user = Codex.getContextUser();
         var region = user.get('region');
         var id = user.get('id');
@@ -92,7 +94,6 @@ var kmv2 = {
                 }
             });
         }
-        kmv2.start.disabled = true;
     },
     onHistoryLoad: function (d, c) {
         for (var i = 0; i < c.games.games.length; i++) {            
@@ -109,10 +110,12 @@ var kmv2 = {
         }
         kmv2.games = kmv2.games.concat(c.games.games);
         kmv2.update.disabled = false;
+        kmv2.start.disabled = false;
         kmv2.start.setAttribute("value", (kmv2.games.length / kmv2.gamesCodex.pager.total) * 100 + "%");
     },
     onPromiseError: function (c, a, b) {
-        console.log(a + " - " + b);
+        kmv2.start.setAttribute("value", a + " - " + b);
+        kmv2.start.disabled = false;
     }
 };
 
