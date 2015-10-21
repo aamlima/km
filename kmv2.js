@@ -27,10 +27,10 @@ var kmv2 = {
                 "\" title=\"" + (gameAsc.participants[0].stats.win ? "V" : "D") + ": " +
                 championAsc + "(" + gameAsc.participants[0].stats.champLevel + ") " +
                 gameAsc.participants[0].stats.kills + "/" + gameAsc.participants[0].stats.deaths + "/" + gameAsc.participants[0].stats.assists +
-                " " + Codex.common.binding.Map.maps[gameAsc.mapId] + " " + Codex.common.binding.Mode.modes[gameAsc.gameMode] +
-                " " + Codex.common.binding.Queue.queues[gameAsc.queueId] +
-                " " + Math.floor(gameAsc.gameDuration / 60) + ":" + (gameAsc.gameDuration - (Math.floor(gameAsc.gameDuration / 60) * 60)) +
-                " " + dateAsc.toLocaleString() + "\">"
+                " | " + Codex.common.binding.Map.maps[gameAsc.mapId] + " | " + Codex.common.binding.Mode.modes[gameAsc.gameMode] +
+                " | " + Codex.common.binding.Queue.queues[gameAsc.queueId] +
+                " | " + Math.floor(gameAsc.gameDuration / 60) + ":" + (gameAsc.gameDuration - (Math.floor(gameAsc.gameDuration / 60) * 60)) +
+                " | " + dateAsc.toLocaleString() + "\">"
                 + championAsc[0] +
                 "</a>";
             finalDescHTML +=
@@ -38,10 +38,10 @@ var kmv2 = {
                 "\" title=\"" + (gameDesc.participants[0].stats.win ? "V" : "D") + ": "
                 + championDesc + "(" + gameDesc.participants[0].stats.champLevel + ") " +
                 gameDesc.participants[0].stats.kills + "/" + gameDesc.participants[0].stats.deaths + "/" + gameDesc.participants[0].stats.assists +
-                " " + Codex.common.binding.Map.maps[gameDesc.mapId] + " " + Codex.common.binding.Mode.modes[gameDesc.gameMode] +
-                " " + Codex.common.binding.Queue.queues[gameDesc.queueId] +
-                " " + Math.floor(gameDesc.gameDuration / 60) + ":" + (gameDesc.gameDuration - (Math.floor(gameDesc.gameDuration / 60) * 60)) +
-                " " + dateDesc.toLocaleString() + "\">"
+                " | " + Codex.common.binding.Map.maps[gameDesc.mapId] + " | " + Codex.common.binding.Mode.modes[gameDesc.gameMode] +
+                " | " + Codex.common.binding.Queue.queues[gameDesc.queueId] +
+                " | " + Math.floor(gameDesc.gameDuration / 60) + ":" + (gameDesc.gameDuration - (Math.floor(gameDesc.gameDuration / 60) * 60)) +
+                " | " + dateDesc.toLocaleString() + "\">"
                 + championDesc[0] +
                 "</a>";
         }
@@ -72,7 +72,9 @@ var kmv2 = {
         kmv2.asc = document.createElement("div");
         kmv2.desc = document.createElement("div");
         kmv2.qtd = document.createElement("div");
-        div.appendChild(document.createElement("br"));
+        var d = document.createElement("div");
+        d.innerHTML = "(V)itória/(D)errota: Campeão(Lvl) K/D/A | Mapa | Modo | Fila | Duração | Data criação";
+        div.appendChild(d);
         div.appendChild(kmv2.asc);
         div.appendChild(kmv2.desc);
         div.appendChild(kmv2.qtd);
