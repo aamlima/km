@@ -6,6 +6,7 @@ var kmv2 = {
     qtd: undefined,
     menuDiv: undefined,
     resultDiv: undefined,
+    infoDiv: undefined,
     gamesCodex: undefined,
     games: undefined,
     UpdateShow: function () {
@@ -13,19 +14,16 @@ var kmv2 = {
         kmv2.asc.innerHTML = "Crescente:<br>";
         kmv2.desc.innerHTML = "Decrescente:<br>";
         kmv2.qtd.innerHTML = "Partidas encontradas/total: " + kmv2.games.length + "/" + kmv2.gamesCodex.pager.total;
-        var result = [{ game: undefined, html: "" }, { game: undefined, html: "" }];
+        var result = [{ game: undefined, html: "", index: undefined }, { game: undefined, html: "", index: undefined }];
         for (var i = 0; i < kmv2.games.length; i++) {
+            result[0].index = kmv2.games.length - i - 1;
+            result[1].index = i;
             result[0].game = kmv2.games[kmv2.games.length - i - 1];
             result[1].game = kmv2.games[i];
             for (var j = 0; j < result.length; j++) {
                 result[j].html +=
                 "<a style=\"color: white;\" href=\"#match-details/BR1/" + result[j].game.gameId + "/" + result[j].game.player.currentAccountId +
-                "\" title=\"" + (result[j].game.stats.win ? "V" : "D") + ": " + result[j].game.championName + " | " +
-                (result[j].game.timeline.role === "NONE" ? "" : result[j].game.timeline.role) + " " + result[j].game.timeline.lane + " | " +
-                result[j].game.stats.champLevel + " | " + result[j].game.stats.kills + "/" + result[j].game.stats.deaths + "/" +
-                result[j].game.stats.assists + " | " + result[j].game.mapName + " | " + result[j].game.modeName + " | " + result[j].game.queueName +
-                " | " + result[j].game.gameDurationString + " | " + result[j].game.gameCreationString + " | " + result[j].game.gameVersion + " | " +
-                result[j].game.player.summonerName + "\">" + result[j].game.championName[0] + "</a>";
+                "\" onmouseover=\"kmv2.SetInfo("+result[j].index+");\" onmouseout=\"kmv2.HideInfo();\">" + result[j].game.championName[0] + "</a>";
             }
         }
 
@@ -56,19 +54,24 @@ var kmv2 = {
         kmv2.asc = document.createElement("div");
         kmv2.desc = document.createElement("div");
         kmv2.qtd = document.createElement("div");
-        var d = document.createElement("div");
-        d.innerHTML = "(V)itória/(D)errota: Campeão | Lane | Level | K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome";
-        div.appendChild(d);
+        //var d = document.createElement("div");
+        //d.innerHTML = "(V)itória/(D)errota: Campeão | Lane | Level | K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome";
+        //div.appendChild(d);
         div.appendChild(kmv2.asc);
         div.appendChild(kmv2.desc);
         div.appendChild(kmv2.qtd);
         kmv2.resultDiv = div;
+        var div = document.createElement("div");
+        div.setAttribute("style", "position: fixed; top: 250px; left: 5px; border: 2px solid black; padding: 2px; z-index: 3000001; background-color: white;");
+        document.body.appendChild(div);
+        kmv2.infoDiv = div;
         kmv2.gamesCodex = Ramen.getCollection("Games");
         return true;
     },
     DestroySelf: function () {
         document.body.removeChild(kmv2.menuDiv);
         document.body.removeChild(kmv2.resultDiv);
+        document.body.removeChild(kmv2.infoDiv);
         kmv2 = undefined;
     },
     Test: function () {
@@ -116,6 +119,19 @@ var kmv2 = {
     onPromiseError: function (c, a, b) {
         kmv2.start.setAttribute("value", a + " - " + b);
         kmv2.start.disabled = false;
+    },
+    SetInfo: function (gameIndex) {
+        var game = kmv2.games[gameIndex];
+        kmv2.infoDiv.hidden = false;
+        kmv2.infoDiv.innerText = (game.stats.win ? "V" : "D") + ": " + game.championName + " | " +
+        (game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane + " | " +
+        game.stats.champLevel + " | " + game.stats.kills + "/" + game.stats.deaths + "/" +
+        game.stats.assists + " | " + game.mapName + " | " + game.modeName + " | " + game.queueName +
+        " | " + game.gameDurationString + " | " + game.gameCreationString + " | " + game.gameVersion + " | " +
+        game.player.summonerName;
+    },
+    HideInfo: function () {
+        kmv2.infoDiv.hidden = true;
     }
 };
 
