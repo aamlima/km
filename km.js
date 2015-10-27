@@ -1,3 +1,13 @@
+var Utils = {
+    Setup: function () {
+        Utils.champions = Riot.DDragon.models.champion.remapKeys,
+        Utils.maps = Codex.common.binding.Map.maps,
+        Utils.modes = Codex.common.binding.Mode.modes,
+        Utils.queues = Codex.common.binding.Queue.queues,
+        Utils.gamesCodex = Ramen.getCollection("Games");
+    }
+};
+
 var km = {
     start: undefined,
     update: undefined,
@@ -7,13 +17,12 @@ var km = {
     menuDiv: undefined,
     resultDiv: undefined,
     infoDiv: undefined,
-    gamesCodex: undefined,
     games: undefined,
     UpdateShow: function () {
         km.games.sort(function (a, b) { return b.gameCreation - a.gameCreation; });
         km.asc.innerHTML = "Crescente:<br>";
         km.desc.innerHTML = "Decrescente:<br>";
-        km.qtd.innerHTML = "Partidas encontradas/total: " + km.games.length + "/" + km.gamesCodex.pager.total;
+        km.qtd.innerHTML = "Partidas encontradas/total: " + km.games.length + "/" + Utils.gamesCodex.pager.total;
         var result = [{ game: undefined, html: "", index: undefined }, { game: undefined, html: "", index: undefined }];
         for (var i = 0; i < km.games.length; i++) {
             result[0].index = km.games.length - i - 1;
@@ -36,7 +45,7 @@ var km = {
         var btn = document.createElement("input");
         btn.setAttribute("type", "button");
         btn.setAttribute("value", "Pegar partidas");
-        btn.addEventListener("click", km.Test);
+        btn.addEventListener("click", km.GetGames);
         div.appendChild(btn);
         km.start = btn;
         btn = document.createElement("input");
@@ -63,16 +72,17 @@ var km = {
         document.body.appendChild(div);
         km.infoDiv = div;
         km.infoDiv.hidden = true;
-        km.gamesCodex = Ramen.getCollection("Games");
+        Utils.Setup();
         return true;
     },
     DestroySelf: function () {
-        document.body.removeChild(km.menuDiv);
-        document.body.removeChild(km.resultDiv);
-        document.body.removeChild(km.infoDiv);
+        if(km.menuDiv) document.body.removeChild(km.menuDiv);
+        if(km.resultDiv) document.body.removeChild(km.resultDiv);
+        if(km.infoDiv) document.body.removeChild(km.infoDiv);
+        Utils = undefined;
         km = undefined;
     },
-    Test: function () {
+    GetGames: function () {
         km.games = [];
         km.update.disabled = true;
         km.start.disabled = true;
@@ -80,10 +90,10 @@ var km = {
         var region = user.get('region');
         var id = user.get('id');
 
-        for (var i = 0; i < Math.ceil(km.gamesCodex.pager.total / 20) ; i++) {
+        for (var i = 0; i < Math.ceil(Utils.gamesCodex.pager.total / 20) ; i++) {
             var startIndex = i * 20;
             var endIndex = startIndex + 20;
-            var queryString = '?begIndex=' + startIndex + '&endIndex=' + endIndex + '&' + km.gamesCodex.getFilters();
+            var queryString = '?begIndex=' + startIndex + '&endIndex=' + endIndex + '&' + Utils.gamesCodex.getFilters();
             var url = Codex.util.ACS.getPlayerHistory(region, id, queryString);
 
             Codex.util.ACS.makeRequest({
@@ -98,13 +108,13 @@ var km = {
     },
     onHistoryLoad: function (d, c) {
         for (var i = 0; i < c.games.games.length; i++) {            
-            c.games.games[i].championName = Riot.DDragon.models.champion.remapKeys[c.games.games[i].participants[0].championId];
+            c.games.games[i].championName = Utils.champions[c.games.games[i].participants[0].championId];
             c.games.games[i].stats = c.games.games[i].participants[0].stats;
             c.games.games[i].timeline = c.games.games[i].participants[0].timeline;
             c.games.games[i].player = c.games.games[i].participantIdentities[0].player;
-            c.games.games[i].mapName = Codex.common.binding.Map.maps[c.games.games[i].mapId];
-            c.games.games[i].modeName = Codex.common.binding.Mode.modes[c.games.games[i].gameMode];
-            c.games.games[i].queueName = Codex.common.binding.Queue.queues[c.games.games[i].queueId];
+            c.games.games[i].mapName = Utils.maps[c.games.games[i].mapId];
+            c.games.games[i].modeName = Utils.modes[c.games.games[i].gameMode];
+            c.games.games[i].queueName = Utils.queues[c.games.games[i].queueId];
             c.games.games[i].gameDurationString = Math.floor(c.games.games[i].gameDuration / 60) + ":" +
                 (c.games.games[i].gameDuration - (Math.floor(c.games.games[i].gameDuration / 60) * 60));
             c.games.games[i].gameCreationString = new Date(c.games.games[i].gameCreation).toLocaleString();
@@ -112,7 +122,7 @@ var km = {
         km.games = km.games.concat(c.games.games);
         km.update.disabled = false;
         km.start.disabled = false;
-        km.start.setAttribute("value", (km.games.length / km.gamesCodex.pager.total) * 100 + "%");
+        km.start.setAttribute("value", (km.games.length / Utils.gamesCodex.pager.total) * 100 + "%");
     },
     onPromiseError: function (c, a, b) {
         km.start.setAttribute("value", a + " - " + b);
