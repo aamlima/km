@@ -147,6 +147,11 @@ var KM = {
 
         KM.inspect.props["Nome"].innerHTML = "Nome: " + game.player.summonerName;
     },
+    SetButtonsState: function (match, asc, desc) {
+        KM.menu.props["Partidas"].disabled = match;
+        KM.menu.props["Crescente"].disabled = asc;
+        KM.menu.props["Decrescente"].disabled = desc;
+    },
     DestroySelf: function () {
         if (KM.main) document.body.removeChild(KM.main);
     }
@@ -185,6 +190,7 @@ var km = {
     Attach: function () {
         Utils.Setup();
         KM.Setup();
+        KM.SetButtonsState(false, true, true);
         return true;
     },
     DestroySelf: function () {
@@ -195,6 +201,8 @@ var km = {
     },
     GetGames: function () {
         km.games = [];
+        KM.SetButtonsState(true, true, true);
+
         var user = Codex.getContextUser();
         var region = user.get('region');
         var id = user.get('id');
@@ -229,11 +237,12 @@ var km = {
             c.games.games[i].gameCreationString = new Date(c.games.games[i].gameCreation).toLocaleString();
         }
         km.games = km.games.concat(c.games.games);
+        KM.SetButtonsState(false, false, false);
         KM.UpdatePartidas(km.games.length, Utils.gamesCodex.pager.total);
     },
     onPromiseError: function (c, a, b) {
         //km.start.setAttribute("value", a + " - " + b);
-        //km.start.disabled = false;
+        KM.SetButtonsState(false, true, true);
     },
     SetInfo: function (gameIndex) {
         KM.UpdateInspect(km.games[gameIndex]);        
