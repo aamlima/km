@@ -123,13 +123,29 @@ var KM = {
         KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: " + current + "/" + total;
     },
     UpdateInspect: function (game) {
-        //km.infoDiv.innerHTML = "(V)itória/(D)errota: Campeão | Lane | Level | K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome<br>" +
-        //(game.stats.win ? "V" : "D") + ": " + game.championName + " | " +
-        //(game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane + " | " +
-        //game.stats.champLevel + " | " + game.stats.kills + "/" + game.stats.deaths + "/" +
-        //game.stats.assists + " | " + game.mapName + " | " + game.modeName + " | " + game.queueName +
-        //" | " + game.gameDurationString + " | " + game.gameCreationString + " | " + game.gameVersion + " | " +
-        //game.player.summonerName;
+        KM.inspect.props["Resultado"].style.backgroundColor = (game.stats.win ? "#0F0" : "#F00");
+
+        KM.inspect.props["Campeao"].innerHTML = "Campeão: " + game.championName;
+
+        KM.inspect.props["Level"].innerHTML = "Level: " + game.stats.champLevel;
+
+        KM.inspect.props["Lane"].innerHTML = "Lane: " + (game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane;
+
+        KM.inspect.props["KDA"].innerHTML = "K/D/A: " + game.stats.kills + "/" + game.stats.deaths + "/" + game.stats.assists;
+
+        KM.inspect.props["Mapa"].innerHTML = "Mapa: " + game.mapName;
+
+        KM.inspect.props["Modo"].innerHTML = "Modo: " + game.modeName;
+
+        KM.inspect.props["Fila"].innerHTML = "Fila: " + game.queueName;
+
+        KM.inspect.props["Duracao"].innerHTML = "Duração: " + game.gameDurationString;
+
+        KM.inspect.props["Criacao"].innerHTML = "Data de criação: " + game.gameCreationString;
+
+        KM.inspect.props["Patch"].innerHTML = "Patch: " + game.gameVersion;
+
+        KM.inspect.props["Nome"].innerHTML = "Nome: " + game.player.summonerName;
     },
     DestroySelf: function () {
         if (KM.main) document.body.removeChild(KM.main);
