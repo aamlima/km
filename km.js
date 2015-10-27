@@ -63,9 +63,9 @@ var KM = {
         KM.inspect = document.createElement("div");
         KM.inspect.props = {};
 
-        KM.inspect.props["Resultado"] = document.createElement("div");
-        KM.inspect.props["Resultado"].innerHTML = " ";
-        KM.inspect.appendChild(KM.inspect.props["Resultado"]);
+        KM.inspect.props["Header"] = document.createElement("div");
+        KM.inspect.props["Header"].innerHTML = "&nbsp;";
+        KM.inspect.appendChild(KM.inspect.props["Header"]);
 
         KM.inspect.props["Campeao"] = document.createElement("div");
         KM.inspect.props["Campeao"].innerHTML = " ";
@@ -111,6 +111,10 @@ var KM = {
         KM.inspect.props["Nome"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Nome"]);
 
+        KM.inspect.props["Footer"] = document.createElement("div");
+        KM.inspect.props["Footer"].innerHTML = "&nbsp;";
+        KM.inspect.appendChild(KM.inspect.props["Footer"]);
+
         KM.main.appendChild(KM.inspect);
 
         $("body").prepend(KM.main);
@@ -123,7 +127,8 @@ var KM = {
         KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: " + current + "/" + total;
     },
     UpdateInspect: function (game) {
-        KM.inspect.props["Resultado"].style.backgroundColor = (game.stats.win ? "#0F0" : "#F00");
+        KM.inspect.props["Header"].style.backgroundColor = (game.stats.win ? "rgba(0, 255, 0, 0.25)" : "rgba(255, 0, 0, 0.25)");
+        KM.inspect.props["Footer"].style.backgroundColor = (game.stats.win ? "rgba(0, 255, 0, 0.25)" : "rgba(255, 0, 0, 0.25)");
 
         KM.inspect.props["Campeao"].innerHTML = "Campeão: " + game.championName;
 
