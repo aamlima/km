@@ -46,11 +46,13 @@ var KM = {
         KM.header = document.createElement("div");
         KM.header.props = {};
 
-        KM.header.props["Titulo"] = document.createElement("div");
-        KM.header.appendChild(KM.header.props["Titulo"]);
-
         KM.header.props["Partidas"] = document.createElement("div");
+        KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: ???/???";
         KM.header.appendChild(KM.header.props["Partidas"]);
+
+        KM.header.props["Titulo"] = document.createElement("div");
+        KM.header.props["Titulo"].innerHTML = " ";
+        KM.header.appendChild(KM.header.props["Titulo"]);
 
         KM.main.appendChild(KM.header);
 
@@ -62,39 +64,51 @@ var KM = {
         KM.inspect.props = {};
 
         KM.inspect.props["Resultado"] = document.createElement("div");
+        KM.inspect.props["Resultado"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Resultado"]);
 
         KM.inspect.props["Campeao"] = document.createElement("div");
+        KM.inspect.props["Campeao"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Campeao"]);
 
         KM.inspect.props["Level"] = document.createElement("div");
+        KM.inspect.props["Level"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Level"]);
 
         KM.inspect.props["Lane"] = document.createElement("div");
+        KM.inspect.props["Lane"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Lane"]);
 
         KM.inspect.props["KDA"] = document.createElement("div");
+        KM.inspect.props["KDA"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["KDA"]);
 
         KM.inspect.props["Mapa"] = document.createElement("div");
+        KM.inspect.props["Mapa"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Mapa"]);
 
         KM.inspect.props["Modo"] = document.createElement("div");
+        KM.inspect.props["Modo"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Modo"]);
 
         KM.inspect.props["Fila"] = document.createElement("div");
+        KM.inspect.props["Fila"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Fila"]);
 
         KM.inspect.props["Duracao"] = document.createElement("div");
+        KM.inspect.props["Duracao"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Duracao"]);
 
         KM.inspect.props["Criacao"] = document.createElement("div");
+        KM.inspect.props["Criacao"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Criacao"]);
 
         KM.inspect.props["Patch"] = document.createElement("div");
+        KM.inspect.props["Patch"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Patch"]);
 
         KM.inspect.props["Nome"] = document.createElement("div");
+        KM.inspect.props["Nome"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Nome"]);
 
         KM.main.appendChild(KM.inspect);
@@ -104,6 +118,18 @@ var KM = {
     UpdateResult: function (title, result) {
         KM.header.props["Titulo"].innerHTML = title;
         KM.result.innerHTML = result;
+    },
+    UpdatePartidas:function (current, total){
+        KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: " + current + "/" + total;
+    },
+    UpdateInspect: function (game) {
+        //km.infoDiv.innerHTML = "(V)itória/(D)errota: Campeão | Lane | Level | K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome<br>" +
+        //(game.stats.win ? "V" : "D") + ": " + game.championName + " | " +
+        //(game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane + " | " +
+        //game.stats.champLevel + " | " + game.stats.kills + "/" + game.stats.deaths + "/" +
+        //game.stats.assists + " | " + game.mapName + " | " + game.modeName + " | " + game.queueName +
+        //" | " + game.gameDurationString + " | " + game.gameCreationString + " | " + game.gameVersion + " | " +
+        //game.player.summonerName;
     },
     DestroySelf: function () {
         if (KM.main) document.body.removeChild(KM.main);
@@ -128,7 +154,6 @@ var km = {
     },
     ShowDesc: function () {
         km.games.sort(function (a, b) { return b.gameCreation - a.gameCreation; });
-        //km.qtd.innerHTML = "Partidas encontradas/total: " + km.games.length + "/" + Utils.gamesCodex.pager.total;
         var game = undefined,
             index = undefined,
             html = "";
@@ -188,21 +213,14 @@ var km = {
             c.games.games[i].gameCreationString = new Date(c.games.games[i].gameCreation).toLocaleString();
         }
         km.games = km.games.concat(c.games.games);
-        //km.start.setAttribute("value", (km.games.length / Utils.gamesCodex.pager.total) * 100 + "%");
+        KM.UpdatePartidas(km.games.length, Utils.gamesCodex.pager.total);
     },
     onPromiseError: function (c, a, b) {
         //km.start.setAttribute("value", a + " - " + b);
         //km.start.disabled = false;
     },
     SetInfo: function (gameIndex) {
-        var game = km.games[gameIndex];
-        //km.infoDiv.innerHTML = "(V)itória/(D)errota: Campeão | Lane | Level | K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome<br>" +
-        //(game.stats.win ? "V" : "D") + ": " + game.championName + " | " +
-        //(game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane + " | " +
-        //game.stats.champLevel + " | " + game.stats.kills + "/" + game.stats.deaths + "/" +
-        //game.stats.assists + " | " + game.mapName + " | " + game.modeName + " | " + game.queueName +
-        //" | " + game.gameDurationString + " | " + game.gameCreationString + " | " + game.gameVersion + " | " +
-        //game.player.summonerName;
+        KM.UpdateInspect(km.games[gameIndex]);        
     }
 };
 
