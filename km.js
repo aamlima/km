@@ -1,4 +1,5 @@
 var Utils = {
+    champions: undefined, maps: undefined, modes: undefined, queues: undefined, gamesCodex: undefined,
     Setup: function () {
         Utils.champions = Riot.DDragon.models.champion.remapKeys,
         Utils.maps = Codex.common.binding.Map.maps,
@@ -8,84 +9,151 @@ var Utils = {
     }
 };
 
-var km = {
-    start: undefined,
-    update: undefined,
-    asc: undefined,
-    desc: undefined,
-    qtd: undefined,
-    menuDiv: undefined,
-    resultDiv: undefined,
-    infoDiv: undefined,
-    games: undefined,
-    UpdateShow: function () {
-        km.games.sort(function (a, b) { return b.gameCreation - a.gameCreation; });
-        km.asc.innerHTML = "Crescente:<br>";
-        km.desc.innerHTML = "Decrescente:<br>";
-        km.qtd.innerHTML = "Partidas encontradas/total: " + km.games.length + "/" + Utils.gamesCodex.pager.total;
-        var result = [{ game: undefined, html: "", index: undefined }, { game: undefined, html: "", index: undefined }];
-        for (var i = 0; i < km.games.length; i++) {
-            result[0].index = km.games.length - i - 1;
-            result[1].index = i;
-            result[0].game = km.games[km.games.length - i - 1];
-            result[1].game = km.games[i];
-            for (var j = 0; j < result.length; j++) {
-                result[j].html +=
-                "<a style=\"color: white;\" href=\"#match-details/BR1/" + result[j].game.gameId + "/" + result[j].game.player.currentAccountId +
-                "\" onmouseover=\"km.SetInfo("+result[j].index+");\" onmouseout=\"km.HideInfo();\">" + result[j].game.championName[0] + "</a>";
-            }
-        }
+var KM = {
+    main: undefined, menu: undefined, header: undefined, result: undefined, inspect: undefined,
+    Setup: function () {
+        KM.main = document.createElement("div");
 
-        km.asc.innerHTML += result[0].html;
-        km.desc.innerHTML += result[1].html;
+        KM.menu = document.createElement("div");
+        KM.menu.props = {};
+
+        KM.menu.props["Remover"] = document.createElement("input");
+        KM.menu.props["Remover"].setAttribute("type", "button");
+        KM.menu.props["Remover"].setAttribute("value", "Remover tudo");
+        KM.menu.props["Remover"].addEventListener("click", km.DestroySelf);
+        KM.menu.appendChild(KM.menu.props["Remover"]);
+
+        KM.menu.props["Partidas"] = document.createElement("input");
+        KM.menu.props["Partidas"].setAttribute("type", "button");
+        KM.menu.props["Partidas"].setAttribute("value", "Pegar partidas");
+        KM.menu.props["Partidas"].addEventListener("click", km.GetGames);
+        KM.menu.appendChild(KM.menu.props["Partidas"]);
+
+        KM.menu.props["Crescente"] = document.createElement("input");
+        KM.menu.props["Crescente"].setAttribute("type", "button");
+        KM.menu.props["Crescente"].setAttribute("value", "Mostrar em ordem crescente");
+        KM.menu.props["Crescente"].addEventListener("click", km.ShowAsc);
+        KM.menu.appendChild(KM.menu.props["Crescente"]);
+
+        KM.menu.props["Decrescente"] = document.createElement("input");
+        KM.menu.props["Decrescente"].setAttribute("type", "button");
+        KM.menu.props["Decrescente"].setAttribute("value", "Mostrar em ordem decrescente");
+        KM.menu.props["Decrescente"].addEventListener("click", km.ShowDesc);
+        KM.menu.appendChild(KM.menu.props["Decrescente"]);
+
+        KM.main.appendChild(KM.menu);
+
+        KM.header = document.createElement("div");
+        KM.header.props = {};
+
+        KM.header.props["Titulo"] = document.createElement("div");
+        KM.header.appendChild(KM.header.props["Titulo"]);
+
+        KM.header.props["Partidas"] = document.createElement("div");
+        KM.header.appendChild(KM.header.props["Partidas"]);
+
+        KM.main.appendChild(KM.header);
+
+
+        KM.result = document.createElement("div");
+        KM.main.appendChild(KM.result);
+
+        KM.inspect = document.createElement("div");
+        KM.inspect.props = {};
+
+        KM.inspect.props["Resultado"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Resultado"]);
+
+        KM.inspect.props["Campeao"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Campeao"]);
+
+        KM.inspect.props["Level"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Level"]);
+
+        KM.inspect.props["Lane"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Lane"]);
+
+        KM.inspect.props["KDA"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["KDA"]);
+
+        KM.inspect.props["Mapa"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Mapa"]);
+
+        KM.inspect.props["Modo"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Modo"]);
+
+        KM.inspect.props["Fila"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Fila"]);
+
+        KM.inspect.props["Duracao"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Duracao"]);
+
+        KM.inspect.props["Criacao"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Criacao"]);
+
+        KM.inspect.props["Patch"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Patch"]);
+
+        KM.inspect.props["Nome"] = document.createElement("div");
+        KM.inspect.appendChild(KM.inspect.props["Nome"]);
+
+        KM.main.appendChild(KM.inspect);
+
+        $("body").prepend(KM.main);
+    },
+    UpdateResult: function (title, result) {
+        KM.header.props["Titulo"].innerHTML = title;
+        KM.result.innerHTML = result;
+    },
+    DestroySelf: function () {
+        if (KM.main) document.body.removeChild(KM.main);
+    }
+}
+
+var km = {
+    games: undefined,
+    ShowAsc: function(){
+        km.games.sort(function (a, b) { return b.gameCreation - a.gameCreation; });
+        var game = undefined,
+            index = undefined,
+            html = "";
+        for (var i = 0; i < km.games.length; i++) {
+            index = km.games.length - i - 1;
+            game = km.games[index];
+            html +=
+            "<a style=\"color: white;\" href=\"#match-details/BR1/" + game.gameId + "/" + game.player.currentAccountId +
+            "\" onmouseover=\"km.SetInfo("+index+");\" >" + game.championName[0] + "</a>";
+        }
+        KM.UpdateResult("Crescente", html);
+    },
+    ShowDesc: function () {
+        km.games.sort(function (a, b) { return b.gameCreation - a.gameCreation; });
+        //km.qtd.innerHTML = "Partidas encontradas/total: " + km.games.length + "/" + Utils.gamesCodex.pager.total;
+        var game = undefined,
+            index = undefined,
+            html = "";
+        for (var i = 0; i < km.games.length; i++) {
+            index = i;
+            game = km.games[index];
+                html +=
+                "<a style=\"color: white;\" href=\"#match-details/BR1/" + game.gameId + "/" + game.player.currentAccountId +
+                "\" onmouseover=\"km.SetInfo("+index+");\" >" + game.championName[0] + "</a>";
+        }
+        KM.UpdateResult("Decrescente", html);
     },
     Attach: function () {
-        var div = document.createElement("div");
-        div.setAttribute("style", "position: fixed; top: 5px; left: 5px; border: 2px solid black; padding: 2px; z-index: 3000001; background-color: white;");
-        var btn = document.createElement("input");
-        btn.setAttribute("type", "button");
-        btn.setAttribute("value", "Pegar partidas");
-        btn.addEventListener("click", km.GetGames);
-        div.appendChild(btn);
-        km.start = btn;
-        btn = document.createElement("input");
-        btn.setAttribute("type", "button");
-        btn.setAttribute("value", "Mostrar resultado");
-        btn.addEventListener("click", km.UpdateShow);
-        div.appendChild(btn);
-        km.update = btn;
-        km.update.disabled = true;
-        document.body.appendChild(div);
-        km.menuDiv = div;
-        div = document.createElement("div");
-        div.setAttribute("style", "margin: 5px; color: white; z-index: 100; background-color: black;");
-        $("body").prepend(div);
-        km.asc = document.createElement("div");
-        km.desc = document.createElement("div");
-        km.qtd = document.createElement("div");
-        div.appendChild(km.asc);
-        div.appendChild(km.desc);
-        div.appendChild(km.qtd);
-        km.resultDiv = div;
-        var div = document.createElement("div");
-        div.setAttribute("style", "position: fixed; top: 250px; left: 5px; border: 2px solid black; padding: 2px; z-index: 3000001; background-color: white;");
-        document.body.appendChild(div);
-        km.infoDiv = div;
-        km.infoDiv.hidden = true;
         Utils.Setup();
+        KM.Setup();
         return true;
     },
     DestroySelf: function () {
-        if(km.menuDiv) document.body.removeChild(km.menuDiv);
-        if(km.resultDiv) document.body.removeChild(km.resultDiv);
-        if(km.infoDiv) document.body.removeChild(km.infoDiv);
+        KM.DestroySelf();
         Utils = undefined;
+        KM = undefined;
         km = undefined;
     },
     GetGames: function () {
         km.games = [];
-        km.update.disabled = true;
-        km.start.disabled = true;
         var user = Codex.getContextUser();
         var region = user.get('region');
         var id = user.get('id');
@@ -120,28 +188,21 @@ var km = {
             c.games.games[i].gameCreationString = new Date(c.games.games[i].gameCreation).toLocaleString();
         }
         km.games = km.games.concat(c.games.games);
-        km.update.disabled = false;
-        km.start.disabled = false;
-        km.start.setAttribute("value", (km.games.length / Utils.gamesCodex.pager.total) * 100 + "%");
+        //km.start.setAttribute("value", (km.games.length / Utils.gamesCodex.pager.total) * 100 + "%");
     },
     onPromiseError: function (c, a, b) {
-        km.start.setAttribute("value", a + " - " + b);
-        km.start.disabled = false;
+        //km.start.setAttribute("value", a + " - " + b);
+        //km.start.disabled = false;
     },
     SetInfo: function (gameIndex) {
         var game = km.games[gameIndex];
-        km.infoDiv.style.top = (km.resultDiv.clientHeight+ 50) + "px";
-        km.infoDiv.hidden = false;
-        km.infoDiv.innerHTML = "(V)itória/(D)errota: Campeão | Lane | Level | K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome<br>" +
-        (game.stats.win ? "V" : "D") + ": " + game.championName + " | " +
-        (game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane + " | " +
-        game.stats.champLevel + " | " + game.stats.kills + "/" + game.stats.deaths + "/" +
-        game.stats.assists + " | " + game.mapName + " | " + game.modeName + " | " + game.queueName +
-        " | " + game.gameDurationString + " | " + game.gameCreationString + " | " + game.gameVersion + " | " +
-        game.player.summonerName;
-    },
-    HideInfo: function () {
-        km.infoDiv.hidden = true;
+        //km.infoDiv.innerHTML = "(V)itória/(D)errota: Campeão | Lane | Level | K/D/A | Mapa | Modo | Fila | Duração | Data criação | Patch | Nome<br>" +
+        //(game.stats.win ? "V" : "D") + ": " + game.championName + " | " +
+        //(game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane + " | " +
+        //game.stats.champLevel + " | " + game.stats.kills + "/" + game.stats.deaths + "/" +
+        //game.stats.assists + " | " + game.mapName + " | " + game.modeName + " | " + game.queueName +
+        //" | " + game.gameDurationString + " | " + game.gameCreationString + " | " + game.gameVersion + " | " +
+        //game.player.summonerName;
     }
 };
 
