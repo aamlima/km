@@ -22,7 +22,7 @@ var Utils = {
 };
 
 var KM = {
-    main: undefined, menu: undefined, header: undefined, result: undefined, inspect: undefined,
+    main: undefined, menu: undefined, header: undefined, result: undefined, inspect: undefined, icons: undefined,
     Setup: function () {
         KM.main = document.createElement("div");
         KM.main.setAttribute('style', 'color: white');
@@ -79,6 +79,51 @@ var KM = {
         KM.inspect.props["Header"] = document.createElement("div");
         KM.inspect.props["Header"].innerHTML = "&nbsp;";
         KM.inspect.appendChild(KM.inspect.props["Header"]);
+
+        KM.icons = document.createElement("div");
+        KM.icons.props = {};
+
+        KM.icons.props["Campeao"] = document.createElement("img");
+        KM.icons.props["Campeao"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Campeao"]);
+
+        KM.icons.props["Summoner1"] = document.createElement("img");
+        KM.icons.props["Summoner1"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Summoner1"]);
+
+        KM.icons.props["Summoner2"] = document.createElement("img");
+        KM.icons.props["Summoner2"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Summoner2"]);
+
+        KM.icons.props["Item0"] = document.createElement("img");
+        KM.icons.props["Item0"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Item0"]);
+
+        KM.icons.props["Item1"] = document.createElement("img");
+        KM.icons.props["Item1"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Item1"]);
+
+        KM.icons.props["Item2"] = document.createElement("img");
+        KM.icons.props["Item2"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Item2"]);
+
+        KM.icons.props["Item3"] = document.createElement("img");
+        KM.icons.props["Item3"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Item3"]);
+
+        KM.icons.props["Item4"] = document.createElement("img");
+        KM.icons.props["Item4"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Item4"]);
+
+        KM.icons.props["Item5"] = document.createElement("img");
+        KM.icons.props["Item5"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Item5"]);
+
+        KM.icons.props["Item6"] = document.createElement("img");
+        KM.icons.props["Item6"].setAttribute('width', "64");
+        KM.icons.appendChild(KM.icons.props["Item6"]);
+
+        KM.inspect.appendChild(KM.icons);
 
         KM.inspect.props["Campeao"] = document.createElement("div");
         KM.inspect.props["Campeao"].innerHTML = " ";
@@ -191,6 +236,27 @@ var KM = {
 
         KM.inspect.props["Nome"].innerHTML = "Nome: " + game.player.summonerName;
     },
+    UpdateIcons:function(imgs){
+        KM.icons.props["Campeao"].setAttribute('src', imgs.champion);
+
+        KM.icons.props["Summoner1"].setAttribute('src', imgs.spells[0]);
+
+        KM.icons.props["Summoner2"].setAttribute('src', imgs.spells[1]);
+
+        KM.icons.props["Item0"].setAttribute('src', imgs.items[0]);
+
+        KM.icons.props["Item1"].setAttribute('src', imgs.items[1]);
+
+        KM.icons.props["Item2"].setAttribute('src', imgs.items[2]);
+
+        KM.icons.props["Item3"].setAttribute('src', imgs.items[3]);
+
+        KM.icons.props["Item4"].setAttribute('src', imgs.items[4]);
+
+        KM.icons.props["Item5"].setAttribute('src', imgs.items[5]);
+
+        KM.icons.props["Item6"].setAttribute('src', imgs.items[6]);
+    },
     SetButtonsState: function (match, asc, desc) {
         KM.menu.props["Partidas"].disabled = match;
         KM.menu.props["Crescente"].disabled = asc;
@@ -279,7 +345,8 @@ var km = {
         KM.SetButtonsState(false, true, true);
     },
     SetInfo: function (gameIndex) {
-        KM.UpdateInspect(km.games[gameIndex]);        
+        KM.UpdateInspect(km.games[gameIndex]);
+        KM.UpdateIcons(km.games[gameIndex].img);
     },
     ProcessGame: function (game) {
         game.championName = Utils.champions[game.participants[0].championId];
@@ -304,7 +371,7 @@ var km = {
                 "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/spell/" + Utils.summoners[game.participants[0].spell2Id] + ".png"]
         };
         for (var j = 0; j < 7; j++) {
-            game.img.items[j] = (game.items[j] === 0 ? "" :
+            game.img.items[j] = (game.items[j] === 0 ? "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/champion/" + game.championName + ".png" :
                 "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/item/" + game.items[j] + ".png");
             game.items[j] = Utils.GetItemName(game.items[j], game.gameVersion);
         }
