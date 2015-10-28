@@ -11,6 +11,13 @@ var Utils = {
     },
     GetSummonerSpellName: function (summonerSpellId) {
         return Riot.DDragon.models.summoner.data[Utils.summoner[summonerSpellId]].name;
+    },
+    GetVersion: function (version) {
+        return DragonRamen.GetVersion(version);
+    },
+    GetItemName: function (itemId, version) {
+        if (itemId === 0) return "_";
+        return DragonRamen.get('item', version, itemId).attributes.name;
     }
 };
 
@@ -88,6 +95,10 @@ var KM = {
         KM.inspect.props["Summoner"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Summoner"]);
 
+        KM.inspect.props["Items"] = document.createElement("div");
+        KM.inspect.props["Items"].innerHTML = " ";
+        KM.inspect.appendChild(KM.inspect.props["Items"]);
+
         KM.inspect.props["KDA"] = document.createElement("div");
         KM.inspect.props["KDA"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["KDA"]);
@@ -146,6 +157,9 @@ var KM = {
         KM.inspect.props["Lane"].innerHTML = "Lane: " + (game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane;
 
         KM.inspect.props["Summoner"].innerHTML = "Summoners: " + game.spells[0] + " & " + game.spells[1];
+
+        KM.inspect.props["Items"].innerHTML = "Items: " + game.items[0] + " & " + game.items[1] + " & " + game.items[2] + " & " + game.items[3] +
+            " & " + game.items[4] + " & " + game.items[5] + " & " + game.items[6];
 
         KM.inspect.props["KDA"].innerHTML = "K/D/A: " + game.stats.kills + "/" + game.stats.deaths + "/" + game.stats.assists;
 
@@ -256,9 +270,9 @@ var km = {
                 Utils.GetSummonerSpellName(c.games.games[i].participants[0].spell2Id)];
             c.games.games[i].items = [c.games.games[i].stats.item0, c.games.games[i].stats.item1, c.games.games[i].stats.item2,
             c.games.games[i].stats.item3, c.games.games[i].stats.item4, c.games.games[i].stats.item5, c.games.games[i].stats.item6];
-            //for (var j = 0; j < 7; j++) {
-            //    c.games.games[i].items[j] = c.games.games[i].items[j] === 0 ? "" : Utils.items[c.games.games[i].items[j]];
-            //}
+            for (var j = 0; j < 7; j++) {
+                c.games.games[i].items[j] = Utils.GetItemName(c.games.games[i].items[j], c.games.games[i].gameVersion);
+            }
         }
         km.games = km.games.concat(c.games.games);
         KM.SetButtonsState(false, false, false);
