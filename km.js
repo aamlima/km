@@ -1,11 +1,16 @@
 var Utils = {
-    champions: undefined, maps: undefined, modes: undefined, queues: undefined, gamesCodex: undefined,
+    champions: undefined, maps: undefined, modes: undefined, queues: undefined, gamesCodex: undefined, summoner: undefined, items: undefined,
     Setup: function () {
         Utils.champions = Riot.DDragon.models.champion.remapKeys,
         Utils.maps = Codex.common.binding.Map.maps,
         Utils.modes = Codex.common.binding.Mode.modes,
         Utils.queues = Codex.common.binding.Queue.queues,
-        Utils.gamesCodex = Ramen.getCollection("Games");
+        Utils.gamesCodex = Ramen.getCollection("Games"),
+        Utils.summoner = Riot.DDragon.models.summoner.remapKeys;
+        Utils.items = Riot.DDragon.models.item.data;
+    },
+    GetSummonerSpellName: function (summonerSpellId) {
+        return Riot.DDragon.models.summoner.data[Utils.summoner[summonerSpellId]].name;
     }
 };
 
@@ -79,6 +84,10 @@ var KM = {
         KM.inspect.props["Lane"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Lane"]);
 
+        KM.inspect.props["Summoner"] = document.createElement("div");
+        KM.inspect.props["Summoner"].innerHTML = " ";
+        KM.inspect.appendChild(KM.inspect.props["Summoner"]);
+
         KM.inspect.props["KDA"] = document.createElement("div");
         KM.inspect.props["KDA"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["KDA"]);
@@ -136,6 +145,8 @@ var KM = {
 
         KM.inspect.props["Lane"].innerHTML = "Lane: " + (game.timeline.role === "NONE" ? "" : game.timeline.role) + " " + game.timeline.lane;
 
+        KM.inspect.props["Summoner"].innerHTML = "Summoners: " + game.spells[0] + " & " + game.spells[1];
+
         KM.inspect.props["KDA"].innerHTML = "K/D/A: " + game.stats.kills + "/" + game.stats.deaths + "/" + game.stats.assists;
 
         KM.inspect.props["Mapa"].innerHTML = "Mapa: " + game.mapName;
@@ -151,6 +162,7 @@ var KM = {
         KM.inspect.props["Patch"].innerHTML = "Patch: " + game.gameVersion;
 
         KM.inspect.props["Nome"].innerHTML = "Nome: " + game.player.summonerName;
+        //goldSpent/goldEarned
     },
     SetButtonsState: function (match, asc, desc) {
         KM.menu.props["Partidas"].disabled = match;
@@ -240,6 +252,13 @@ var km = {
             c.games.games[i].gameDurationString = Math.floor(c.games.games[i].gameDuration / 60) + ":" +
                 (c.games.games[i].gameDuration - (Math.floor(c.games.games[i].gameDuration / 60) * 60));
             c.games.games[i].gameCreationString = new Date(c.games.games[i].gameCreation).toLocaleString();
+            c.games.games[i].spells = [Utils.GetSummonerSpellName(c.games.games[i].participants[0].spell1Id),
+                Utils.GetSummonerSpellName(c.games.games[i].participants[0].spell2Id)];
+            c.games.games[i].items = [c.games.games[i].stats.item0, c.games.games[i].stats.item1, c.games.games[i].stats.item2,
+            c.games.games[i].stats.item3, c.games.games[i].stats.item4, c.games.games[i].stats.item5, c.games.games[i].stats.item6];
+            //for (var j = 0; j < 7; j++) {
+            //    c.games.games[i].items[j] = c.games.games[i].items[j] === 0 ? "" : Utils.items[c.games.games[i].items[j]];
+            //}
         }
         km.games = km.games.concat(c.games.games);
         KM.SetButtonsState(false, false, false);
