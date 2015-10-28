@@ -25,7 +25,7 @@ var KM = {
     main: undefined, menu: undefined, header: undefined, result: undefined, inspect: undefined, icons: undefined,
     Setup: function () {
         KM.main = document.createElement("div");
-        KM.main.setAttribute('style', 'color: white');
+        KM.main.setAttribute('style', 'color: white; margin: 5px;');
 
         KM.menu = document.createElement("div");
         KM.menu.props = {};
@@ -60,7 +60,7 @@ var KM = {
         KM.header.props = {};
 
         KM.header.props["Partidas"] = document.createElement("div");
-        KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: ???/???";
+        KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: 0/" + Utils.gamesCodex.pager.total;
         KM.header.appendChild(KM.header.props["Partidas"]);
 
         KM.header.props["Titulo"] = document.createElement("div");
@@ -74,11 +74,8 @@ var KM = {
         KM.main.appendChild(KM.result);
 
         KM.inspect = document.createElement("div");
+        KM.inspect.setAttribute('style', 'z-index: 9999999; position: fixed; background-color: rgba(0, 0, 0, 0.667);');
         KM.inspect.props = {};
-
-        KM.inspect.props["Header"] = document.createElement("div");
-        KM.inspect.props["Header"].innerHTML = "&nbsp;";
-        KM.inspect.appendChild(KM.inspect.props["Header"]);
 
         KM.icons = document.createElement("div");
         KM.icons.props = {};
@@ -185,10 +182,6 @@ var KM = {
         KM.inspect.props["Nome"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Nome"]);
 
-        KM.inspect.props["Footer"] = document.createElement("div");
-        KM.inspect.props["Footer"].innerHTML = "&nbsp;";
-        KM.inspect.appendChild(KM.inspect.props["Footer"]);
-
         KM.main.appendChild(KM.inspect);
 
         $("body").prepend(KM.main);
@@ -201,8 +194,7 @@ var KM = {
         KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: " + current + "/" + total;
     },
     UpdateInspect: function (game) {
-        KM.inspect.props["Header"].style.backgroundColor = (game.stats.win ? "rgba(0, 255, 0, 0.25)" : "rgba(255, 0, 0, 0.25)");
-        KM.inspect.props["Footer"].style.backgroundColor = (game.stats.win ? "rgba(0, 255, 0, 0.25)" : "rgba(255, 0, 0, 0.25)");
+        KM.icons.style.backgroundColor = (game.stats.win ? "rgba(0, 255, 0, 0.25)" : "rgba(255, 0, 0, 0.25)");
 
         KM.inspect.props["Campeao"].innerHTML = "Campeão: " + game.championName;
 
