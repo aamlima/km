@@ -99,9 +99,17 @@ var KM = {
         KM.inspect.props["Items"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["Items"]);
 
+        KM.inspect.props["Ouro"] = document.createElement("div");
+        KM.inspect.props["Ouro"].innerHTML = " ";
+        KM.inspect.appendChild(KM.inspect.props["Ouro"]);
+
         KM.inspect.props["KDA"] = document.createElement("div");
         KM.inspect.props["KDA"].innerHTML = " ";
         KM.inspect.appendChild(KM.inspect.props["KDA"]);
+
+        KM.inspect.props["Minions"] = document.createElement("div");
+        KM.inspect.props["Minions"].innerHTML = " ";
+        KM.inspect.appendChild(KM.inspect.props["Minions"]);
 
         KM.inspect.props["Mapa"] = document.createElement("div");
         KM.inspect.props["Mapa"].innerHTML = " ";
@@ -161,7 +169,12 @@ var KM = {
         KM.inspect.props["Items"].innerHTML = "Items: " + game.items[0] + " & " + game.items[1] + " & " + game.items[2] + " & " + game.items[3] +
             " & " + game.items[4] + " & " + game.items[5] + " & " + game.items[6];
 
+        KM.inspect.props["Ouro"].innerHTML = "Ouro gasto/ouro recebido: " + game.stats.goldSpent + "/" + game.stats.goldEarned;
+
         KM.inspect.props["KDA"].innerHTML = "K/D/A: " + game.stats.kills + "/" + game.stats.deaths + "/" + game.stats.assists;
+
+        KM.inspect.props["Minions"].innerHTML = "Minions + Neutros: " + game.stats.totalMinionsKilled + " + " + game.stats.neutralMinionsKilled +
+            " = " + (game.stats.totalMinionsKilled + game.stats.neutralMinionsKilled);
 
         KM.inspect.props["Mapa"].innerHTML = "Mapa: " + game.mapName;
 
@@ -176,7 +189,6 @@ var KM = {
         KM.inspect.props["Patch"].innerHTML = "Patch: " + game.gameVersion;
 
         KM.inspect.props["Nome"].innerHTML = "Nome: " + game.player.summonerName;
-        //goldSpent/goldEarned
     },
     SetButtonsState: function (match, asc, desc) {
         KM.menu.props["Partidas"].disabled = match;
