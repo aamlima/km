@@ -1,19 +1,19 @@
 var Utils = {
-    champions: undefined, maps: undefined, modes: undefined, queues: undefined, gamesCodex: undefined, summoner: undefined, items: undefined,
+    champions: undefined, maps: undefined, modes: undefined, queues: undefined, gamesCodex: undefined, summoners: undefined, items: undefined,
     Setup: function () {
         Utils.champions = Riot.DDragon.models.champion.remapKeys,
         Utils.maps = Codex.common.binding.Map.maps,
         Utils.modes = Codex.common.binding.Mode.modes,
         Utils.queues = Codex.common.binding.Queue.queues,
         Utils.gamesCodex = Ramen.getCollection("Games"),
-        Utils.summoner = Riot.DDragon.models.summoner.remapKeys;
+        Utils.summoners = Riot.DDragon.models.summoner.remapKeys;
         Utils.items = Riot.DDragon.models.item.data;
     },
     GetSummonerSpellName: function (summonerSpellId) {
-        return Riot.DDragon.models.summoner.data[Utils.summoner[summonerSpellId]].name;
+        return Riot.DDragon.models.summoner.data[Utils.summoners[summonerSpellId]].name;
     },
     GetVersion: function (version) {
-        return DragonRamen.GetVersion(version);
+        return DragonRamen.getVersion(version);
     },
     GetItemName: function (itemId, version) {
         if (itemId === 0) return "_";
@@ -25,6 +25,7 @@ var KM = {
     main: undefined, menu: undefined, header: undefined, result: undefined, inspect: undefined,
     Setup: function () {
         KM.main = document.createElement("div");
+        KM.main.setAttribute('style', 'color: white');
 
         KM.menu = document.createElement("div");
         KM.menu.props = {};
@@ -267,35 +268,47 @@ var km = {
         }
     },
     onHistoryLoad: function (d, c) {
-        for (var i = 0; i < c.games.games.length; i++) {            
-            c.games.games[i].championName = Utils.champions[c.games.games[i].participants[0].championId];
-            c.games.games[i].stats = c.games.games[i].participants[0].stats;
-            c.games.games[i].timeline = c.games.games[i].participants[0].timeline;
-            c.games.games[i].player = c.games.games[i].participantIdentities[0].player;
-            c.games.games[i].mapName = Utils.maps[c.games.games[i].mapId];
-            c.games.games[i].modeName = Utils.modes[c.games.games[i].gameMode];
-            c.games.games[i].queueName = Utils.queues[c.games.games[i].queueId];
-            c.games.games[i].gameDurationString = Math.floor(c.games.games[i].gameDuration / 60) + ":" +
-                (c.games.games[i].gameDuration - (Math.floor(c.games.games[i].gameDuration / 60) * 60));
-            c.games.games[i].gameCreationString = new Date(c.games.games[i].gameCreation).toLocaleString();
-            c.games.games[i].spells = [Utils.GetSummonerSpellName(c.games.games[i].participants[0].spell1Id),
-                Utils.GetSummonerSpellName(c.games.games[i].participants[0].spell2Id)];
-            c.games.games[i].items = [c.games.games[i].stats.item0, c.games.games[i].stats.item1, c.games.games[i].stats.item2,
-            c.games.games[i].stats.item3, c.games.games[i].stats.item4, c.games.games[i].stats.item5, c.games.games[i].stats.item6];
-            for (var j = 0; j < 7; j++) {
-                c.games.games[i].items[j] = Utils.GetItemName(c.games.games[i].items[j], c.games.games[i].gameVersion);
-            }
+        for (var i = 0; i < c.games.games.length; i++) {
+            c.games.games[i] = km.ProcessGame(c.games.games[i]);
         }
         km.games = km.games.concat(c.games.games);
         KM.SetButtonsState(false, false, false);
         KM.UpdatePartidas(km.games.length, Utils.gamesCodex.pager.total);
     },
     onPromiseError: function (c, a, b) {
-        //km.start.setAttribute("value", a + " - " + b);
         KM.SetButtonsState(false, true, true);
     },
     SetInfo: function (gameIndex) {
         KM.UpdateInspect(km.games[gameIndex]);        
+    },
+    ProcessGame: function (game) {
+        game.championName = Utils.champions[game.participants[0].championId];
+        game.gameVersion2 = Utils.GetVersion(game.gameVersion);
+        game.stats = game.participants[0].stats;
+        game.timeline = game.participants[0].timeline;
+        game.player = game.participantIdentities[0].player;
+        game.mapName = Utils.maps[game.mapId];
+        game.modeName = Utils.modes[game.gameMode];
+        game.queueName = Utils.queues[game.queueId];
+        game.gameDurationString = Math.floor(game.gameDuration / 60) + ":" +
+            (game.gameDuration - (Math.floor(game.gameDuration / 60) * 60));
+        game.gameCreationString = new Date(game.gameCreation).toLocaleString();
+        game.spells = [Utils.GetSummonerSpellName(game.participants[0].spell1Id),
+            Utils.GetSummonerSpellName(game.participants[0].spell2Id)];
+        game.items = [game.stats.item0, game.stats.item1, game.stats.item2,
+        game.stats.item3, game.stats.item4, game.stats.item5, game.stats.item6];
+        game.img = {
+            champion: "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/champion/" + game.championName + ".png",
+            items: [],
+            spells: ["http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/spell/" + Utils.summoners[game.participants[0].spell1Id] + ".png",
+                "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/spell/" + Utils.summoners[game.participants[0].spell2Id] + ".png"]
+        };
+        for (var j = 0; j < 7; j++) {
+            game.img.items[j] = (game.items[j] === 0 ? "" :
+                "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/item/" + game.items[j] + ".png");
+            game.items[j] = Utils.GetItemName(game.items[j], game.gameVersion);
+        }
+        return game;
     }
 };
 
