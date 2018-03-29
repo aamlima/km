@@ -63,6 +63,10 @@ var KM = {
         KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: 0/" + Utils.gamesCodex.pager.total;
         KM.header.appendChild(KM.header.props["Partidas"]);
 
+        KM.header.props["WOL"] = document.createElement("div");
+        KM.header.props["WOL"].innerHTML = "WOL: 0";
+        KM.header.appendChild(KM.header.props["WOL"]);
+
         KM.header.props["Titulo"] = document.createElement("div");
         KM.header.props["Titulo"].innerHTML = " ";
         KM.header.appendChild(KM.header.props["Titulo"]);
@@ -71,6 +75,7 @@ var KM = {
 
 
         KM.result = document.createElement("div");
+        KM.result.setAttribute('style', 'overflow-wrap: break-word;');
         KM.main.appendChild(KM.result);
 
         KM.inspect = document.createElement("div");
@@ -193,10 +198,17 @@ var KM = {
     UpdatePartidas:function (current, total){
         KM.header.props["Partidas"].innerHTML = "Partidas encontradas/total: " + current + "/" + total;
     },
+    UpdateWOL:function (total){
+        var min = Math.floor(total / 60);
+        var seg = (total - min * 60)
+        var hr = Math.floor(min / 60);
+        min -= hr*60;
+        KM.header.props["WOL"].innerHTML = "WOL: " + hr + ':' + min + ":" + seg
+    },
     UpdateInspect: function (game) {
         KM.icons.style.backgroundColor = (game.stats.win ? "rgba(0, 255, 0, 0.25)" : "rgba(255, 0, 0, 0.25)");
 
-        KM.inspect.props["Campeao"].innerHTML = "Campe„o: " + game.championName;
+        KM.inspect.props["Campeao"].innerHTML = "Campe√£o: " + game.championName;
 
         KM.inspect.props["Level"].innerHTML = "Level: " + game.stats.champLevel;
 
@@ -220,9 +232,9 @@ var KM = {
 
         KM.inspect.props["Fila"].innerHTML = "Fila: " + game.queueName;
 
-        KM.inspect.props["Duracao"].innerHTML = "DuraÁ„o: " + game.gameDurationString;
+        KM.inspect.props["Duracao"].innerHTML = "Dura√ß√£o: " + game.gameDurationString;
 
-        KM.inspect.props["Criacao"].innerHTML = "Data de criaÁ„o: " + game.gameCreationString;
+        KM.inspect.props["Criacao"].innerHTML = "Data de cria√ß√£o: " + game.gameCreationString;
 
         KM.inspect.props["Patch"].innerHTML = "Patch: " + game.gameVersion;
 
@@ -265,29 +277,35 @@ var km = {
         km.games.sort(function (a, b) { return b.gameCreation - a.gameCreation; });
         var game = undefined,
             index = undefined,
-            html = "";
+            html = "",
+            dur = 0;
         for (var i = 0; i < km.games.length; i++) {
             index = km.games.length - i - 1;
             game = km.games[index];
+            dur += game.gameDuration;
             html +=
             "<a style=\"color: white;\" href=\"#match-details/BR1/" + game.gameId + "/" + game.player.currentAccountId +
             "\" onmouseover=\"km.SetInfo("+index+");\" >" + game.championName[0] + "</a>";
         }
         KM.UpdateResult("Crescente", html);
+        KM.UpdateWOL(dur);
     },
     ShowDesc: function () {
         km.games.sort(function (a, b) { return b.gameCreation - a.gameCreation; });
         var game = undefined,
             index = undefined,
-            html = "";
+            html = "",
+            dur = 0;
         for (var i = 0; i < km.games.length; i++) {
             index = i;
             game = km.games[index];
+            dur += game.gameDuration;
                 html +=
                 "<a style=\"color: white;\" href=\"#match-details/BR1/" + game.gameId + "/" + game.player.currentAccountId +
                 "\" onmouseover=\"km.SetInfo("+index+");\" >" + game.championName[0] + "</a>";
         }
         KM.UpdateResult("Decrescente", html);
+        KM.UpdateWOL(dur);
     },
     Attach: function () {
         Utils.Setup();
@@ -313,7 +331,8 @@ var km = {
             var startIndex = i * 20;
             var endIndex = startIndex + 20;
             var queryString = '?begIndex=' + startIndex + '&endIndex=' + endIndex + '&' + Utils.gamesCodex.getFilters();
-            var url = Codex.util.ACS.getPlayerHistory(region, id, queryString);
+            //var url = Codex.util.ACS.getPlayerHistory(region, id, queryString);
+            var url = 'https://acs.leagueoflegends.com/v1/stats/player_history/auth'+queryString;
 
             Codex.util.ACS.makeRequest({
                 url: url,
@@ -357,14 +376,14 @@ var km = {
         game.items = [game.stats.item0, game.stats.item1, game.stats.item2,
         game.stats.item3, game.stats.item4, game.stats.item5, game.stats.item6];
         game.img = {
-            champion: "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/champion/" + game.championName + ".png",
+            champion: "https://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/champion/" + game.championName + ".png",
             items: [],
-            spells: ["http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/spell/" + Utils.summoners[game.participants[0].spell1Id] + ".png",
-                "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/spell/" + Utils.summoners[game.participants[0].spell2Id] + ".png"]
+            spells: ["https://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/spell/" + Utils.summoners[game.participants[0].spell1Id] + ".png",
+                "https://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/spell/" + Utils.summoners[game.participants[0].spell2Id] + ".png"]
         };
         for (var j = 0; j < 7; j++) {
-            game.img.items[j] = (game.items[j] === 0 ? "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/champion/" + game.championName + ".png" :
-                "http://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/item/" + game.items[j] + ".png");
+            game.img.items[j] = (game.items[j] === 0 ? "https://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/champion/" + game.championName + ".png" :
+                "https://ddragon.leagueoflegends.com/cdn/" + game.gameVersion2 + "/img/item/" + game.items[j] + ".png");
             game.items[j] = Utils.GetItemName(game.items[j], game.gameVersion);
         }
         return game;
